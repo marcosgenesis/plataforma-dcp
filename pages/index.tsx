@@ -3,11 +3,12 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Subscribe from "./subscribe";
 
 const Home: NextPage = () => {
   const router = useRouter();
   return (
-    <div style={{ width: "100%"}}>
+    <div style={{ width: "100%" }}>
       <div
         style={{
           display: "flex",
@@ -18,8 +19,11 @@ const Home: NextPage = () => {
           justifyContent: "space-evenly",
         }}
       >
-          <img src='https://media.tenor.com/YxQRjVsG73cAAAAC/caneta-azul.gif' style={{ width: "100px", height: "100px"}}></img>
-      
+        <img
+          src="https://media.tenor.com/YxQRjVsG73cAAAAC/caneta-azul.gif"
+          style={{ width: "100px", height: "100px" }}
+        ></img>
+
         <button
           style={{
             border: "none",
@@ -46,6 +50,7 @@ const Home: NextPage = () => {
       >
         Restante da landing page
       </div>
+      <Subscribe />
     </div>
   );
 };
