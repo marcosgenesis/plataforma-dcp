@@ -10,7 +10,7 @@ interface InputProps extends HtmlElementProps<HTMLSelectElement> {
   options: { value: string; label: string }[];
 }
 
-const Select: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
+const Select: ForwardRefRenderFunction<HTMLSelectElement, InputProps> = (
   { onChange, onBlur, name, label, disabled, options, error },
   ref
 ) => {
