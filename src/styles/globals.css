@@ -1,0 +1,26 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  font-family: "Inter", sans-serif;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('../assets/nunito/nunito.black.ttf');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('../assets/nunito/nunito.bold.ttf');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('../assets/nunito/nunito.italic.ttf');
+  font-weight: 400;
+  font-style: italic;
+}
