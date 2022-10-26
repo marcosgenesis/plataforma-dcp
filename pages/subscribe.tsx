@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Container, Grid } from "@mui/material";
+import SubForm from "../components/SubForm";
 
 const Subscribe: React.FC = () => {
   return (
@@ -18,15 +19,15 @@ const Subscribe: React.FC = () => {
           </div>
         </Grid>
         <Grid item xs={4}>
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              backgroundColor: "#c2c2c2",
-            }}
-          >
-            Formulário
-          </div>
+          <SubForm
+            name={""}
+            uf={""}
+            city={""}
+            email={""}
+            description={""}
+            checkEmail={false}
+            checkTerm={false}
+          />
         </Grid>
       </Grid>
     </div>
