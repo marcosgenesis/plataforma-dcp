@@ -1,35 +1,22 @@
 import React from "react";
-
-import { Container, Grid } from "@mui/material";
+import { Container, ImageContainer, TitleTextContainer } from "../styles/waitlist";
 import SubForm from "../components/SubForm";
 
 const Subscribe: React.FC = () => {
   return (
-    <div>
-      <Grid container>
-        <Grid item xs={8} >
-          <div
-            style={{
-              height: "100vh",
-              backgroundColor: "#E8F7FC",
-            }}
-          >
-            Imagem
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <SubForm
-            name={""}
-            uf={""}
-            city={""}
-            email={""}
-            description={""}
-            checkEmail={false}
-            checkTerm={false}
-          />
-        </Grid>
-      </Grid>
-    </div>
+    <Container>
+      <ImageContainer>
+        <TitleTextContainer>
+          <h1>TRAMA BOX</h1>
+          <p>A caixinha de surpresas perfeita para sua criatividade!</p>
+        </TitleTextContainer>
+        <img
+          src='https://user-images.githubusercontent.com/49327985/198047320-3d7bc72b-f5ad-46c4-abe1-b9a4b446f82d.png'
+          alt=''
+        />
+      </ImageContainer>
+      <SubForm />
+    </Container>
   );
 };
 
