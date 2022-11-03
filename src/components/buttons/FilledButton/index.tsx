@@ -2,6 +2,15 @@ import React from "react";
 
 import { FilledButtonContainer } from "./styles";
 
-export const FilledButton: React.FC = ({ children }) => {
-  return <FilledButtonContainer>{children}</FilledButtonContainer>;
+interface FilledButtonContainer extends HTMLButtonElement {
+  width: string;
+}
+
+export const FilledButton: React.FC<FilledButtonProps> = ({
+  children,
+  width,
+}) => {
+  return (
+    <FilledButtonContainer width={width}>{children}</FilledButtonContainer>
+  );
 };
