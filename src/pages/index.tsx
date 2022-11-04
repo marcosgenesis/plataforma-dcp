@@ -303,10 +303,10 @@ const Home: NextPage = () => {
         <Boxes>
           <Box>
             <Image
-              src='/icons/left-arrow.svg'
+              src='/box2.png'
               alt='Step one'
               width={375}
-              height={442}
+              height={338}
             />
             <h4>Terror Sangrento</h4>
             <p>
@@ -316,10 +316,10 @@ const Home: NextPage = () => {
           </Box>
           <Box>
             <Image
-              src='/icons/left-arrow.svg'
+              src='/box3.png'
               alt='Step one'
               width={375}
-              height={442}
+              height={338}
             />
             <h4>Contos de Fadas</h4>
             <p>
@@ -329,10 +329,10 @@ const Home: NextPage = () => {
           </Box>
           <Box>
             <Image
-              src='/icons/left-arrow.svg'
+              src='/box1.png'
               alt='Step one'
               width={375}
-              height={442}
+              height={338}
             />
             <h4>Suspense Noir</h4>
             <p>
@@ -342,7 +342,7 @@ const Home: NextPage = () => {
           </Box>
         </Boxes>
       </PreviousBoxesContainer>
-      <Footer expanded/>
+      <Footer expanded />
     </Container>
   );
 };
