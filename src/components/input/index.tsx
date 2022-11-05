@@ -21,7 +21,7 @@ const Input: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
     <InputContainer>
       <Label htmlFor={label}>{label}</Label>
       {type === "textarea" && (
-        <TextArea name={label} ref={ref} onChange={onChange} onBlur={onBlur} />
+        <TextArea name={name} ref={ref} onChange={onChange} onBlur={onBlur} />
       )}
       {type !== "textarea" && (
         <InputField

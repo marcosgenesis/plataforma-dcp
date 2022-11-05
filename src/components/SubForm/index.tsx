@@ -1,12 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../input";
 import Select from "../select";
 import { Button, FlexDiv, FormContainer } from "./styled";
 import { Checkbox, FormControl, FormHelperText } from "@mui/material";
+import { ToastContainer, toast } from 'react-toastify';
+import api from "../../services/api";
+
+import 'react-toastify/dist/ReactToastify.css';
 
 interface IProps {
   name: string;
@@ -16,6 +20,15 @@ interface IProps {
   description: string;
   checkEmail: boolean;
   checkTerm: boolean;
+}
+
+interface DataProps {
+  city : string;
+  email: string;
+  name : string;
+  receiveUpdates: boolean;
+  note : string;
+  state: string;
 }
 
 const formSchema = yup.object().shape({
@@ -70,86 +83,105 @@ const SubForm: React.FC<IProps> = () => {
     }
   }, [watchState]);
 
-  function handleWaitlistEnter(data: any) {
-    console.log(formState.errors);
+  async function handleWaitlistEnter(data: FieldValues) {
+    const {city, email, name, news, obs, state, terms } = data
+   
+    const person: DataProps  = {
+      name,
+      email, 
+      city,
+      state,
+      note: obs,
+      receiveUpdates: news,
+    }
+
+    const registeredWaitlist = await api.post('waitlist', person)
+
+    if(registeredWaitlist){
+      toast.success('Email cadastrado na waitlist, confira seu email');
+    } 
+
   }
   useEffect(() => {
     console.log(formState.errors);
   }, [formState.errors]);
   return (
-    <FormContainer>
-      <h2>Inscreva-se na nossa lista de espera!</h2>
-      <form onSubmit={handleSubmit(handleWaitlistEnter)}>
-        <Input
-          name='name'
-          label='Qual o seu nome?'
-          error={formState.errors.name}
-          {...register("name")}
-        />
-        <FlexDiv>
-          <Select
-            name='state'
-            options={states}
-            label='De qual estado você é?'
-            {...register("state")}
-            error={formState.errors.state}
+    <>
+      <FormContainer>
+        <h2>Inscreva-se na nossa lista de espera!</h2>
+        <form onSubmit={handleSubmit(handleWaitlistEnter)}>
+          <Input
+            name='name'
+            label='Qual o seu nome?'
+            error={formState.errors.name}
+            {...register("name")}
           />
-          <Select
-            name='city'
-            options={cities}
-            label='De qual cidade você é?'
-            disabled={!watchState}
-            error={formState.errors.city}
-            {...register("city")}
+          <FlexDiv>
+            <Select
+              name='state'
+              options={states}
+              label='De qual estado você é?'
+              {...register("state")}
+              error={formState.errors.state}
+            />
+            <Select
+              name='city'
+              options={cities}
+              label='De qual cidade você é?'
+              disabled={!watchState}
+              error={formState.errors.city}
+              {...register("city")}
+            />
+          </FlexDiv>
+          <Input
+            name='email'
+            label='Qual o seu email?'
+            {...register("email")}
+            error={formState.errors.email}
           />
-        </FlexDiv>
-        <Input
-          name='email'
-          label='Qual o seu email?'
-          {...register("email")}
-          error={formState.errors.email}
-        />
-        <Input
-          name='obs'
-          label='Alguma observação a acrescentar?'
-          type='textarea'
-          {...register("obs")}
-          error={formState.errors.obs}
-        />
-        <Controller
-          name='news'
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <div style={{ display: "flex" }}>
-              <Checkbox {...field} />
-              <p>
-                Sim, eu gostaria de receber emails de atualização sobre a Trama
-                Box.
-              </p>
-            </div>
-          )}
-        />
-        <Controller
-          name='terms'
-          control={control}
-          rules={{ required: true }}
-          render={({ field, fieldState }) => (
-            <FormControl error={fieldState.error}>
+          <Input
+            name='obs'
+            label='Alguma observação a acrescentar?'
+            type='textarea'
+            {...register("obs")}
+            error={formState.errors.obs}
+          />
+          <Controller
+            name='news'
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
               <div style={{ display: "flex" }}>
                 <Checkbox {...field} />
                 <p>
-                  Sim, eu li e concordo com os <a href='#'>Termos de Serviço</a>{" "}
-                  e <a href='#'>Política de Privacidade.</a>
+                  Sim, eu gostaria de receber emails de atualização sobre a Trama
+                  Box.
                 </p>
               </div>
-              <FormHelperText>{fieldState.error?.message}</FormHelperText>
-            </FormControl>
-          )}
-        />
-        <Button>Inscreva-se!</Button>
-      </form>
-    </FormContainer>
+            )}
+          />
+          <Controller
+            name='terms'
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <FormControl error={fieldState.error}>
+                <div style={{ display: "flex" }}>
+                  <Checkbox {...field} />
+                  <p>
+                    Sim, eu li e concordo com os <a href='#'>Termos de Serviço</a>{" "}
+                    e <a href='#'>Política de Privacidade.</a>
+                  </p>
+                </div>
+                <FormHelperText>{fieldState.error?.message}</FormHelperText>
+              </FormControl>
+            )}
+          />
+          <Button>Inscreva-se!</Button>
+        </form>
+      </FormContainer>
+      <ToastContainer />
+    </>
   );
 };
 
