@@ -1,13 +1,12 @@
 import type { NextPage } from "next";
+import { useState } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { FilledButton } from "../components/buttons/FilledButton"
 import Checkout from "../components/checkout";
-
+import Plan from "../components/plan";
 import { Container, ContainerPlans, ContainerPrice, ContainerSignature, 
-Cupom, StepsContainer, ButtonCode, Step, Title, Plan, DivisionVertical} 
-from "../styles/signature";
-import { useState } from "react";
+Cupom, StepsContainer, ButtonCode, Step, Title} from "../styles/signature";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1)
@@ -53,24 +52,27 @@ const Signature: NextPage = () => {
             step === 1 && (
             <>
               <Title>Escolha seu plano de assinatura</Title>
-              <Plan htmlFor="radio-1">
-                <input type="radio" id="radio-1" name="opcoes"/>
-                <DivisionVertical />
-                <div>
-                  <p>Lançamento: Coleção completa (oferta limitada) </p>
-                  <ul>
-                    <li> Receba todas as caixas de uma só vez! </li>
-                    <li> Parcele em até 8x sem juros no cartão de crédito. </li>
-                  </ul>
-                </div>
-                <span> R$ 600,00 </span>
-              </Plan>
+              <Plan idSelecPlan="radio-1" name="opcoes" 
+                  preco={60} 
+                  title="Lançamento: Coleção completa (oferta limitada)"
+                  itensList={['Receba todas as caixas de uma só vez!',
+                  'Parcele em até 8x sem juros no cartão de crédito']}
+              />
+
+              <Plan idSelecPlan="radio-2" name="opcoes" 
+                preco={1500} 
+                title="Plano Anual"
+                itensList={['Parcele em até 12x sem juros no cartão de crédito.',
+                            'Economize R$ 127,00.']}
+              />
+             
+              {/*
 
               <Plan htmlFor="radio-2" className="plans">
                 <input type="radio" id="radio-2" name="opcoes"/>
                 <DivisionVertical />
                 <div>
-                  <p>Plano Anual </p>
+                  <p> </p>
                   <ul>
                     <li> Parcele em até 12x sem juros no cartão de crédito. </li>
                     <li> Economize R$ 127,00. </li>
@@ -78,7 +80,7 @@ const Signature: NextPage = () => {
                 </div>
                 <span> R$ 1.500,00 </span>
               
-              </Plan>
+              </Plan> */}
             </>
             )
           }
