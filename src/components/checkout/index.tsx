@@ -28,10 +28,10 @@ const Checkout: React.FC = () => {
       </CheckoutContent>
 
       <CheckoutFooter>
-        <CheckoutItemFooter title="Item" value="R$ 600,00"/>
-        <CheckoutItemFooter title="Frete" value="R$ 0,00" />
-        <CheckoutItemFooter title="Cupom" value="- R$ 0,00"/>
-        <CheckoutItemFooter title="Total" value="R$ 600,00" isPriceTotal/>
+        <CheckoutItemFooter title="Item" value={600.40}/>
+        <CheckoutItemFooter title="Frete" value={0} />
+        <CheckoutItemFooter title="Cupom" value={0} />
+        <CheckoutItemFooter title="Total" value={600} isPriceTotal/>
       </CheckoutFooter>
       
     </Container>

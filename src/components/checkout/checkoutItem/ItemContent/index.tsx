@@ -1,10 +1,11 @@
 import React from "react";
+import {convertMoney} from "../../../../utils/convertMoney"
 import {Container, ContentValue, ContentText, Description, Title} from './style'
 
 interface IProps {
   title: string;
   description?: string;
-  value?: string
+  value?: number
 }
 
 const ChekcoutItemContent: React.FC<IProps> = ({description,value, title  }) => {
@@ -19,7 +20,7 @@ const ChekcoutItemContent: React.FC<IProps> = ({description,value, title  }) => 
         </Description>
       </ContentText>
       <ContentValue>
-        {value}
+        {value && convertMoney(value)}
       </ContentValue>
     </Container>
   )
