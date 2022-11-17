@@ -9,8 +9,9 @@ interface FilledButtonContainer extends HTMLButtonElement {
 export const FilledButton: React.FC<FilledButtonProps> = ({
   children,
   width,
+  ...rest
 }) => {
   return (
-    <FilledButtonContainer width={width}>{children}</FilledButtonContainer>
+    <FilledButtonContainer width={width} {...rest}>{children}</FilledButtonContainer>
   );
 };
