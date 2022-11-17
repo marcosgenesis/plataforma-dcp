@@ -1,14 +1,11 @@
 import type { NextPage } from "next";
-import Image from "next/image";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { FilledButton } from "../components/buttons/FilledButton"
-import ChekcoutItem from "../components/checkoutItem/ItemContent";
-import CheckoutItemFooter from '../components/checkoutItem/ItemFooter'
+import Checkout from "../components/checkout";
 
-import { Container, ContainerPlans, Checkout, ContainerPrice, ContainerSignature, 
-Cupom, PlansItens, StepsContainer, CheckoutHeader, CheckoutContent, CheckoutFooter, 
-ButtonCode, Step, Title, Plan, DivisionVertical} 
+import { Container, ContainerPlans, ContainerPrice, ContainerSignature, 
+Cupom, StepsContainer, ButtonCode, Step, Title, Plan, DivisionVertical} 
 from "../styles/signature";
 import { useState } from "react";
 
@@ -98,33 +95,7 @@ const Signature: NextPage = () => {
         </ContainerPlans>
         
         <ContainerPrice>
-          <Checkout>
-            <CheckoutHeader>
-
-              <Image
-                src='/logo-blue.svg'
-                width={74}
-                height={24}
-                alt='Logo da marca'
-              />
-            
-              <p>CHECKOUT</p>
-            </CheckoutHeader>
-
-            <CheckoutContent>
-              <ChekcoutItem title="ITEMS" description="Coleção completa" value="R$ 600,00"/>
-              <ChekcoutItem title="ENTREGA"/>
-              <ChekcoutItem title="CUPOM"/>
-            </CheckoutContent>
-
-            <CheckoutFooter>
-              <CheckoutItemFooter title="Item" value="R$ 600,00"/>
-              <CheckoutItemFooter title="Frete" value="R$ 0,00" />
-              <CheckoutItemFooter title="Cupom" value="- R$ 0,00"/>
-              <CheckoutItemFooter title="Total" value="R$ 600,00" isPriceTotal/>
-            </CheckoutFooter>
-            
-          </Checkout>
+          <Checkout />
           <Cupom>
             <p> Aplicar cupom </p>
             <ButtonCode>

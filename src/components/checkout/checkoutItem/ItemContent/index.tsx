@@ -7,7 +7,7 @@ interface IProps {
   value?: string
 }
 
-const ChekcoutItem: React.FC<IProps> = ({description,value, title  }) => {
+const ChekcoutItemContent: React.FC<IProps> = ({description,value, title  }) => {
   return (
     <Container>
       <ContentText>
@@ -25,4 +25,4 @@ const ChekcoutItem: React.FC<IProps> = ({description,value, title  }) => {
   )
 }
 
-export default ChekcoutItem
+export default ChekcoutItemContent
