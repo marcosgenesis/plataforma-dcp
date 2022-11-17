@@ -21,7 +21,7 @@ export const ContainerPlans = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 12px;
 
-  button {
+  div.buttons {
     align-self: flex-end;
   }
 `;
@@ -160,4 +160,9 @@ export const ButtonCode = styled.div`
       filter: brightness(0.95);
     }
   }
+`;
+
+export const Buttons = styled.div`
+  display: flex;
+  gap: 16px;
 `;

@@ -5,8 +5,9 @@ import Footer from "../components/footer";
 import { FilledButton } from "../components/buttons/FilledButton"
 import Checkout from "../components/checkout";
 import Plan from "../components/plan";
+
 import { Container, ContainerPlans, ContainerPrice, ContainerSignature, 
-Cupom, StepsContainer, ButtonCode, Step, Title} from "../styles/signature";
+Cupom, StepsContainer, ButtonCode, Step, Title, Buttons} from "../styles/signature";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1)
@@ -65,22 +66,6 @@ const Signature: NextPage = () => {
                 itensList={['Parcele em até 12x sem juros no cartão de crédito.',
                             'Economize R$ 127,00.']}
               />
-             
-              {/*
-
-              <Plan htmlFor="radio-2" className="plans">
-                <input type="radio" id="radio-2" name="opcoes"/>
-                <DivisionVertical />
-                <div>
-                  <p> </p>
-                  <ul>
-                    <li> Parcele em até 12x sem juros no cartão de crédito. </li>
-                    <li> Economize R$ 127,00. </li>
-                  </ul>
-                </div>
-                <span> R$ 1.500,00 </span>
-              
-              </Plan> */}
             </>
             )
           }
@@ -91,9 +76,11 @@ const Signature: NextPage = () => {
             )
           }
           
+        <Buttons className="buttons">
+          {step > 1 &&  <FilledButton width="110px" onClick={backStep}> Voltar  </FilledButton>}
+          <FilledButton width="110px" onClick={nextStep}> Próximo  </FilledButton>
+        </Buttons>
 
-        <FilledButton width="110px" onClick={nextStep}> Próximo  </FilledButton>
-          
         </ContainerPlans>
         
         <ContainerPrice>
