@@ -74,7 +74,7 @@ export const Container = styled.label`
 
   ul {
     height: 40px;
-
+    margin-top: 0;
     li {
       font-family: "DM Sans";
       font-style: normal;
