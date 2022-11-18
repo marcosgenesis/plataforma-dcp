@@ -5,6 +5,9 @@ export const InputField = styled.input`
   border: 1px solid rgba(20, 20, 231, 0.12);
   border-radius: 4px;
   padding: 0px 16px;
+  &:focus {
+    background: #E6EEFF;
+  }
 `;
 export const TextArea = styled.textarea`
   min-height: 72px;
