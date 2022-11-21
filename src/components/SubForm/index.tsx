@@ -95,7 +95,7 @@ const SubForm: React.FC<IProps> = () => {
       receiveUpdates: news,
     }
 
-    const registeredWaitlist = await api.post('waitlist', person)
+    const registeredWaitlist = await api.post('api/v1/waitlist', person)
 
     if(registeredWaitlist){
       toast.success('Email cadastrado na waitlist, confira seu email');
