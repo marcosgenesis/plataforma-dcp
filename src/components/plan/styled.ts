@@ -47,7 +47,7 @@ export const Container = styled.label`
     ::before {
       text-align: center;
       justify-self: center;
-      content: "\u2714";
+      content: "\u2713";
       color: #ffffff;
       background: #0055ff;
       border: none;

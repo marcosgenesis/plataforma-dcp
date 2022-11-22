@@ -29,7 +29,7 @@ const Signature: NextPage = () => {
             
               <Step isCurrent={ step === 1} isCompleted={step > 1}>
                 {step > 1 
-                  ? (<div className="step-number"> &#10004; </div>) 
+                  ? (<div className="step-number"> &#10003; </div>) 
                   : (<div className="step-number"> 1 </div>) }
                 
                 <span> Plano </span>
@@ -39,7 +39,7 @@ const Signature: NextPage = () => {
 
               <Step isCurrent={step === 2} isCompleted={step > 2}>
                 {step > 2 
-                  ? (<div className="step-number"> &#10004; </div>) 
+                  ? (<div className="step-number"> &#10003; </div>) 
                   : (<div className="step-number"> 2 </div>) }
                 <span> Identificação </span>
                 <div className="division"/>
@@ -47,7 +47,7 @@ const Signature: NextPage = () => {
 
               <Step isCurrent={step === 3} isCompleted={step > 3}>
                 {step > 3 
-                  ? (<div className="step-number"> &#10004; </div>) 
+                  ? (<div className="step-number"> &#10003; </div>) 
                   : (<div className="step-number"> 3 </div>) }
                 <span> Endereço </span>
                 <div className="division"/>
