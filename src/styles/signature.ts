@@ -1,5 +1,10 @@
 import styled from "styled-components";
 
+interface StepProps {
+  isCurrent: boolean;
+  isCompleted: boolean;
+}
+
 export const Container = styled.div``;
 
 export const ContainerSignature = styled.div`
@@ -32,18 +37,19 @@ export const StepsContainer = styled.div`
   justify-content: space-between;
 `;
 
-export const Step = styled.div`
+export const Step = styled.div<StepProps>`
   display: flex;
   align-items: center;
 
-  div {
+  div.step-number {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 28px;
     height: 28px;
 
-    background: #0055ff;
+    background: ${(props) =>
+      props.isCurrent ? "#0055ff" : props.isCompleted ? "#38c75e" : "#E6E6E6"};
     border-radius: 40px;
 
     font-family: "DM Sans";
@@ -64,14 +70,16 @@ export const Step = styled.div`
     font-size: 14px;
     line-height: 20px;
 
-    color: #0055ff;
+    color: ${(props) =>
+      props.isCurrent ? "#0055ff" : props.isCompleted ? "#38c75e" : "#E6E6E6"};
 
     & + div.division {
       width: 24px;
       height: 0px;
-
+      background: ${(props) => (props.isCompleted ? "#38c75e" : "#E6E6E6")};
       margin-left: 24px;
-      border: 2px solid #e6e6e6;
+      border: 2px solid
+        ${(props) => (props.isCompleted ? "#38c75e" : "#E6E6E6")};
     }
   }
 `;

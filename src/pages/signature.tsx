@@ -7,7 +7,7 @@ import Checkout from "../components/checkout";
 import Plan from "../components/plan";
 
 import { Container, ContainerPlans, ContainerPrice, ContainerSignature, 
-Cupom, StepsContainer, ButtonCode, Step, Title, Buttons} from "../styles/signature";
+Cupom, StepsContainer, ButtonCode, Step, Title, Buttons, StepCompleted} from "../styles/signature";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1)
@@ -26,29 +26,40 @@ const Signature: NextPage = () => {
       <ContainerSignature>
         <ContainerPlans>
           <StepsContainer>
-            <Step>
-              <div> 1 </div>
-              <span> Plano </span>
-              <div className="division"/>
-            </Step>
+            
+              <Step isCurrent={ step === 1} isCompleted={step > 1}>
+                {step > 1 
+                  ? (<div className="step-number"> &#10004; </div>) 
+                  : (<div className="step-number"> 1 </div>) }
+                
+                <span> Plano </span>
+                <div className="division"/>
+              </Step>
+             
 
-            <Step>
-              <div> 2 </div>
-              <span> Identificação </span>
-              <div className="division"/>
-            </Step>
+              <Step isCurrent={step === 2} isCompleted={step > 2}>
+                {step > 2 
+                  ? (<div className="step-number"> &#10004; </div>) 
+                  : (<div className="step-number"> 2 </div>) }
+                <span> Identificação </span>
+                <div className="division"/>
+              </Step>
 
-            <Step>
-              <div> 3 </div>
-              <span> Endereço </span>
-              <div className="division"/>
-            </Step>
-
-            <Step>
-              <div> 4 </div>
+              <Step isCurrent={step === 3} isCompleted={step > 3}>
+                {step > 3 
+                  ? (<div className="step-number"> &#10004; </div>) 
+                  : (<div className="step-number"> 3 </div>) }
+                <span> Endereço </span>
+                <div className="division"/>
+              </Step>
+            
+            <Step isCurrent={step === 4} isCompleted={false}>
+              <div className="step-number"> 4 </div>
               <span> Pagamento </span>
             </Step>
+
           </StepsContainer>
+          
           {
             step === 1 && (
             <>
