@@ -83,7 +83,22 @@ const Signature: NextPage = () => {
 
           {
             step === 2 && (
-              <p>é o segundo</p>
+              <Title>Preencha seus dados pessoais</Title>
+
+            )
+          }
+
+          {
+            step === 3 && (
+              <Title>Informe seu endereço para entrega </Title>
+
+            )
+          }
+
+          {
+            step === 4  && (
+              <Title>Defina a forma de pagamento</Title>
+
             )
           }
           
