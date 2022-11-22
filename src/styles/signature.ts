@@ -72,15 +72,15 @@ export const Step = styled.div<StepProps>`
 
     color: ${(props) =>
       props.isCurrent ? "#0055ff" : props.isCompleted ? "#38c75e" : "#E6E6E6"};
+  }
 
-    & + div.division {
-      width: 24px;
-      height: 0px;
-      background: ${(props) => (props.isCompleted ? "#38c75e" : "#E6E6E6")};
-      margin-left: 24px;
-      border: 2px solid
-        ${(props) => (props.isCompleted ? "#38c75e" : "#E6E6E6")};
-    }
+  div.division {
+    width: 24px;
+    height: 0px;
+    background: ${(props) => (props.isCompleted ? "#38c75e" : "#E6E6E6")};
+    margin-left: 24px;
+    border: 2px solid ${(props) => (props.isCompleted ? "#38c75e" : "#E6E6E6")};
+    border-radius: 2px;
   }
 `;
 
