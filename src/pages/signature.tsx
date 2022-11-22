@@ -5,9 +5,10 @@ import Footer from "../components/footer";
 import { FilledButton } from "../components/buttons/FilledButton"
 import Checkout from "../components/checkout";
 import Plan from "../components/plan";
+import Title from "../components/title";
 
 import { Container, ContainerPlans, ContainerPrice, ContainerSignature, 
-Cupom, StepsContainer, ButtonCode, Step, Title, Buttons, StepCompleted} from "../styles/signature";
+Cupom, StepsContainer, ButtonCode, Step, Buttons} from "../styles/signature";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1)
