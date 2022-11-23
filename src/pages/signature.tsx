@@ -4,11 +4,11 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { FilledButton } from "../components/buttons/FilledButton"
 import Checkout from "../components/checkout";
-import Plan from "../components/plan";
 import Title from "../components/title";
 
 import { Container, ContainerPlans, ContainerPrice, ContainerSignature, 
 Cupom, StepsContainer, ButtonCode, Step, Buttons} from "../styles/signature";
+import PlanForm from "../components/stepsForm/planForm";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1)
@@ -61,53 +61,48 @@ const Signature: NextPage = () => {
 
           </StepsContainer>
           
-          {
-            step === 1 && (
-            <>
-              <Title>Escolha seu plano de assinatura</Title>
-              <Plan idSelecPlan="radio-1" name="opcoes" 
-                  preco={60} 
-                  title="Lançamento: Coleção completa (oferta limitada)"
-                  itensList={['Receba todas as caixas de uma só vez!',
-                  'Parcele em até 8x sem juros no cartão de crédito']}
-              />
-
-              <Plan idSelecPlan="radio-2" name="opcoes" 
-                preco={1500} 
-                title="Plano Anual"
-                itensList={['Parcele em até 12x sem juros no cartão de crédito.',
-                            'Economize R$ 127,00.']}
-              />
-            </>
-            )
-          }
+          { step === 1 && <PlanForm nextStep={nextStep} /> }
 
           {
             step === 2 && (
-              <Title>Preencha seus dados pessoais</Title>
-
+              <>
+              
+                <Title>Preencha seus dados pessoais</Title>
+                <Buttons className="buttons">
+                <FilledButton width="110px" onClick={backStep}> Voltar  </FilledButton>
+                <FilledButton width="110px" > Próximo  </FilledButton>
+                </Buttons>
+              
+              </>
             )
           }
 
           {
             step === 3 && (
+              <>
               <Title>Informe seu endereço para entrega </Title>
-
+              <Buttons className="buttons">
+              <FilledButton width="110px" onClick={backStep}> Voltar  </FilledButton>
+              <FilledButton width="110px" > Próximo  </FilledButton>
+              </Buttons>
+              
+              </>
             )
           }
 
           {
             step === 4  && (
-              <Title>Defina a forma de pagamento</Title>
-
+              <>
+                <Title>Defina a forma de pagamento</Title>
+                <Buttons className="buttons">
+                <FilledButton width="110px" onClick={backStep}> Voltar  </FilledButton>
+                <FilledButton width="110px" > Próximo  </FilledButton>
+                </Buttons>
+              
+              </>
             )
           }
-          
-        <Buttons className="buttons">
-          {step > 1 &&  <FilledButton width="110px" onClick={backStep}> Voltar  </FilledButton>}
-          <FilledButton width="110px" onClick={nextStep}> Próximo  </FilledButton>
-        </Buttons>
-
+      
         </ContainerPlans>
         
         <ContainerPrice>

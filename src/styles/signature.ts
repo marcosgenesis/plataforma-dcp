@@ -25,10 +25,6 @@ export const ContainerPlans = styled.div`
 
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 12px;
-
-  div.buttons {
-    align-self: flex-end;
-  }
 `;
 
 export const StepsContainer = styled.div`
