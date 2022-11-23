@@ -9,6 +9,7 @@ import Title from "../components/title";
 import { Container, ContainerPlans, ContainerPrice, ContainerSignature, 
 Cupom, StepsContainer, ButtonCode, Step, Buttons} from "../styles/signature";
 import PlanForm from "../components/stepsForm/planForm";
+import PersonalForm from "../components/stepsForm/personalForm";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1)
@@ -64,17 +65,7 @@ const Signature: NextPage = () => {
           { step === 1 && <PlanForm nextStep={nextStep} /> }
 
           {
-            step === 2 && (
-              <>
-              
-                <Title>Preencha seus dados pessoais</Title>
-                <Buttons className="buttons">
-                <FilledButton width="110px" onClick={backStep}> Voltar  </FilledButton>
-                <FilledButton width="110px" > Próximo  </FilledButton>
-                </Buttons>
-              
-              </>
-            )
+            step === 2 && <PersonalForm backStep={backStep} nextStep={nextStep}/>
           }
 
           {
