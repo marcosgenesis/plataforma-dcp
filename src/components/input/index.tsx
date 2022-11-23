@@ -11,15 +11,16 @@ import {
 interface InputProps extends HtmlElementProps<HTMLInputElement> {
   label: string;
   error?: FieldError;
+  color: string;
 }
 
 const Input: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { onChange, onBlur, name, label, type, error },
+  { onChange, onBlur, name, label, type, error, color },
   ref
 ) => {
   return (
     <InputContainer>
-      <Label htmlFor={label}>{label}</Label>
+      <Label htmlFor={label} color={color}>{label}</Label>
       {type === "textarea" && (
         <TextArea name={name} ref={ref} onChange={onChange} onBlur={onBlur} />
       )}

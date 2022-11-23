@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+interface LabelProps {
+  color: string;
+}
+
 export const InputField = styled.input`
   height: 48px;
   border: 1px solid rgba(20, 20, 231, 0.12);
@@ -16,11 +20,12 @@ export const TextArea = styled.textarea`
   padding: 16px 16px;
   font-family: Arial;
 `;
-export const Label = styled.label`
+export const Label = styled.label<LabelProps>`
   font-family: Nunito;
   font-weight: bold;
   font-size: 1rem;
   margin-bottom: 8px;
+  color: ${(props) => (props.color ? props.color : "#000000")};
 `;
 export const InputContainer = styled.div`
   display: flex;

@@ -11,12 +11,12 @@ interface InputProps extends HtmlElementProps<HTMLSelectElement> {
 }
 
 const Select: ForwardRefRenderFunction<HTMLSelectElement, InputProps> = (
-  { onChange, onBlur, name, label, disabled, options, error },
+  { onChange, onBlur, name, label, disabled, options, error, color},
   ref
 ) => {
   return (
     <InputContainer>
-      <Label disabled={disabled} htmlFor={label}>
+      <Label color={color} disabled={disabled} htmlFor={label}>
         {label}
       </Label>
       <SelectField

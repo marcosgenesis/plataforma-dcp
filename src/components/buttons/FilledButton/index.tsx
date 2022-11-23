@@ -11,9 +11,10 @@ export const FilledButton: React.FC<FilledButtonProps> = ({
   children,
   width,
   disabled,
+  ...rest
 }) => {
   return (
-    <FilledButtonContainer width={width} disabled={disabled}>
+    <FilledButtonContainer width={width} disabled={disabled} {...rest}>
       {children}
     </FilledButtonContainer>
   );
