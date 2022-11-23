@@ -34,4 +34,4 @@ const Plan:ForwardRefRenderFunction <HTMLInputElement, IProps> = ({
   )
 }
 
-export default  forwardRef(Plan);
+export default forwardRef(Plan);
