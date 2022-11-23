@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+interface SelectProps {
+  color: string;
+}
+
 export const SelectField = styled.select`
   height: 48px;
   border: 1px solid rgba(20, 20, 231, 0.12);
@@ -12,6 +16,7 @@ export const Label = styled.label`
   font-weight: bold;
   font-size: 1rem;
   margin-bottom: 8px;
+  color: ${(props) => (props.color ? props.color : "#000000")};
   opacity: {({disabled}) => disabled ? 0.5 : 1};
 `;
 export const InputContainer = styled.div`
