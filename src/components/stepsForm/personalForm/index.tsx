@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import axios from "axios";
 
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,7 +32,6 @@ const PersonalForm: React.FC<PersonalFormProps> = ({
     nextStep()
   }
 
-  
 
   return (
     <ContainerForm onSubmit={handleSubmit(handlePersonal)}>
