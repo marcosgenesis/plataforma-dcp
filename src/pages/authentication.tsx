@@ -25,8 +25,13 @@ const Auth: NextPage = () => {
           </div>
         </div>
         <InputContainer>
-          <Input label="Email" required></Input>
-          <Input label="Senha" required></Input>
+          <Input
+            label="Email"
+            type="email"
+            placeholder="exemplo@gmail.com"
+            required
+          ></Input>
+          <Input label="Senha" type="password" required></Input>
           <div>
             <div className="user-check">
               <div className="check">
