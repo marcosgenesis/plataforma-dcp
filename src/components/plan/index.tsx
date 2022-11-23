@@ -1,27 +1,27 @@
-import React from "react"
+import React, {InputHTMLAttributes, forwardRef} from "react"
 import {convertMoney} from '../../utils/convertMoney'
 import {Container, DivisionVertical} from './styled'
 
-interface IProps {
-  idSelecPlan: string
+interface IProps extends InputHTMLAttributes<HTMLInputElement>{
   name: string
+  idSelecPlan: string
   title: string
   itensList: Array<string>
   preco: number
 }
 
-const Plan: React.FC<IProps> = ({
+const Plan:ForwardRefRenderFunction <HTMLInputElement, IProps> = ({
   idSelecPlan,
-  name,
   title,
   itensList,
   preco,
+  name,
   ...rest
-}) => {
+  }, ref) => {
 
   return(
   <Container htmlFor={idSelecPlan}>
-    <input type="radio" id={idSelecPlan} name={name}/>
+    <input type="radio" id={idSelecPlan} name={name} value={preco} {...rest} ref={ref}/>
     <DivisionVertical />
     <div>
       <p> {title} </p>
@@ -34,5 +34,4 @@ const Plan: React.FC<IProps> = ({
   )
 }
 
-export default Plan;
-
+export default  forwardRef(Plan);
