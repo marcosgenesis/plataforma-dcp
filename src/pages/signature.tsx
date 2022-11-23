@@ -6,10 +6,12 @@ import { FilledButton } from "../components/buttons/FilledButton"
 import Checkout from "../components/checkout";
 import Title from "../components/title";
 
-import { Container, ContainerPlans, ContainerPrice, ContainerSignature, 
-Cupom, StepsContainer, ButtonCode, Step, Buttons} from "../styles/signature";
 import PlanForm from "../components/stepsForm/planForm";
 import PersonalForm from "../components/stepsForm/personalForm";
+import AddressForm from "../components/stepsForm/addressForm";
+
+import { Container, ContainerPlans, ContainerPrice, ContainerSignature, 
+Cupom, StepsContainer, ButtonCode, Step, Buttons} from "../styles/signature";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1)
@@ -69,16 +71,7 @@ const Signature: NextPage = () => {
           }
 
           {
-            step === 3 && (
-              <>
-              <Title>Informe seu endereço para entrega </Title>
-              <Buttons className="buttons">
-              <FilledButton width="110px" onClick={backStep}> Voltar  </FilledButton>
-              <FilledButton width="110px" > Próximo  </FilledButton>
-              </Buttons>
-              
-              </>
-            )
+            step === 3 && <AddressForm backStep={backStep} nextStep={nextStep} /> 
           }
 
           {
