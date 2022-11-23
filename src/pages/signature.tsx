@@ -81,13 +81,16 @@ const Signature: NextPage = () => {
         
         <ContainerPrice>
           <Checkout />
-          <Cupom>
-            <p> Aplicar cupom </p>
-            <ButtonCode>
-              <input placeholder="Insira o código do cupom" />
-              <button >Aplicar</button>
-            </ButtonCode>
-          </Cupom>
+          
+          {step === 1 && (
+            <Cupom>
+              <p> Aplicar cupom </p>
+              <ButtonCode>
+                <input placeholder="Insira o código do cupom" />
+                <button >Aplicar</button>
+              </ButtonCode>
+            </Cupom>
+          )}
         </ContainerPrice>
       </ContainerSignature>
       <Footer expanded/>
