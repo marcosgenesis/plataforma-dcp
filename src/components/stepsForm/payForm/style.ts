@@ -79,3 +79,33 @@ export const Buttons = styled.div`
   align-self: flex-end;
   gap: 16px;
 `;
+
+export const TicketContainer = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 24px;
+
+  div {
+    width: 70%;
+  }
+
+  h2 {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+
+    color: #000000;
+  }
+
+  p {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+
+    color: #333333;
+  }
+`;

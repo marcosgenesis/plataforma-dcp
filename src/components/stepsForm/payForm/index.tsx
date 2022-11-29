@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
-
+import Image from "next/image";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import schema from './validation'
@@ -9,7 +8,7 @@ import Title from "../../title";
 import { FilledButton } from "../../buttons/FilledButton"
 import { LineButtonForm } from "../../buttons/LineButtonForm"
 
-import {ContainerForm, Buttons, InLine, PayActive, PayActiveContainer} from './style'
+import {ContainerForm, Buttons, InLine, PayActive, PayActiveContainer, TicketContainer} from './style'
 import Input from "../../input";
 import Select from "../../select";
 
@@ -109,13 +108,27 @@ const PayForm: React.FC<PayFormProps> = ({
 
       {payActive === 2 && (
         <>
+          <TicketContainer>
+            <Image
+              src='/codeBarras.svg'
+              alt='Codigo de barras ilustrativo'
+              width={176}
+              height={95}
+            />
+            <div>
+              <h2>Este pagamento é a vista. O prazo de vencimento deste boleto é 23/11/2022.</h2>
+              <p> O prazo de entrega será contado após 1º dia útil da aprovação do pedido.  
+                Este procedimento costuma ocorrer em até 24 horas, mas se o pagamento for realizado por boleto bancário, 
+                o banco tem o prazo de até três dias úteis para confirmar </p>
+            </div>
+          </TicketContainer>
         </>
       )}
       
 
       <Buttons>
         <LineButtonForm  type="button" width="110px" onClick={backStep}> Voltar  </LineButtonForm>
-        <FilledButton width="110px" type="submit" > Próximo  </FilledButton>
+        <FilledButton width="210px" type="submit" > Confirmar pagamento  </FilledButton>
       </Buttons>
     </ContainerForm>
   )
