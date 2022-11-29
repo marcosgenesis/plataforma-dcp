@@ -11,6 +11,7 @@ import { LineButtonForm } from "../../buttons/LineButtonForm"
 import {ContainerForm, Buttons, InLine, PayActive, PayActiveContainer, TicketContainer} from './style'
 import Input from "../../input";
 import Select from "../../select";
+import { useSignature } from "../../../contexts/Signature";
 
 interface PayFormProps {
   nextStep: () => void;
@@ -27,11 +28,13 @@ const PayForm: React.FC<PayFormProps> = ({
     resolver: yupResolver(schema),
   });
 
-  const [payActive, setPayActive] = useState(1)
-  const handlePay = (data: FieldValues) => {
-    console.log('data pay-->', data)
+  const { data, addItemPayStep } = useSignature()
 
-    nextStep()
+  const [payActive, setPayActive] = useState(1)
+  const handlePay = ({cvv, numeroCartao, parcela, titular, vencimento}: FieldValues) => {
+    addItemPayStep({cvv, numeroCartao, parcela, titular, vencimento})
+
+    // nextStep()
   }
 
   return (

@@ -11,6 +11,7 @@ import { LineButtonForm } from "../../buttons/LineButtonForm"
 
 import {ContainerForm, Buttons, InLine} from './style'
 import Input from "../../input";
+import { useSignature } from "../../../contexts/Signature";
 
 interface PersonalFormProps {
   nextStep: () => void;
@@ -26,8 +27,10 @@ const PersonalForm: React.FC<PersonalFormProps> = ({
     resolver: yupResolver(schema),
   });
 
-  const handlePersonal = (data: FieldValues) => {
-    console.log('data person-->', data)
+  const { data, addItemPersonalStep } = useSignature()
+
+  const handlePersonal = ({cpf, email, name, telefone}: FieldValues) => {
+    addItemPersonalStep({cpf, email, name, telefone})
 
     nextStep()
   }
