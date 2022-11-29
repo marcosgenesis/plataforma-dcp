@@ -9,6 +9,7 @@ import Title from "../../title";
 import { FilledButton } from "../../buttons/FilledButton"
 
 import {ContainerForm, MessageErro, Buttons} from './style'
+import { useSignature } from "../../../contexts/Signature";
 
 
 interface PlanProps {
@@ -21,9 +22,11 @@ const PlanForm: React.FC<PlanProps> = ({nextStep, ...rest}) => {
     resolver: yupResolver(schema),
   });
 
+  const { data, addItemPlanStep } = useSignature()
+
 
   const handlePlan = (data: FieldValues) => {
-    console.log('data pla-->', data)
+    addItemPlanStep({plan: data.plan})
     nextStep()
   } 
 
