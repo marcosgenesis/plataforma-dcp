@@ -45,6 +45,7 @@ export const Container = styled.label`
     border-color: #e6eeff;
 
     ::before {
+      padding-top:3px ;
       text-align: center;
       justify-self: center;
       content: "\u2713";

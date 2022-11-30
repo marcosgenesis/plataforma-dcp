@@ -23,7 +23,6 @@ const PlanForm: React.FC<PlanProps> = ({nextStep, ...rest}) => {
 
 
   const handlePlan = (data: FieldValues) => {
-    console.log('data pla-->', data)
     nextStep()
   } 
 
