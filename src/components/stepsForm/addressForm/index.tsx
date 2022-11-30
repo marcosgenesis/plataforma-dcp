@@ -12,6 +12,7 @@ import { LineButtonForm } from "../../buttons/LineButtonForm"
 import {ContainerForm, Buttons, InLine} from './style'
 import Input from "../../input";
 import Select from "../../select";
+import { useSignature } from "../../../contexts/Signature";
 
 interface AddressFormProps {
   nextStep: () => void;
@@ -39,9 +40,10 @@ const AddressForm: React.FC<AddressFormProps> = ({
   });
   const watchState = watch("state");
 
-  const handlePersonal = (data: FieldValues) => {
-    console.log('data person-->', data)
-
+  const { data, addItemAddresStep } = useSignature()
+  
+  const handlePersonal = ({bairro, cep, city, rua, state, complemento, numero}: FieldValues) => {
+    addItemAddresStep({bairro, cep, city, rua, state, complemento, numero})
     nextStep()
   }
 
