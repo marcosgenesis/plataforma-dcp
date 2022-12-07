@@ -20,6 +20,8 @@ import Input from "../../input";
 import Select from "../../select";
 import { useSignature } from "../../../contexts/Signature";
 import { addDays, format } from "date-fns";
+import { useDeliveryStore } from "../../../stores/delivery";
+
 
 interface PayFormProps {
   nextStep: () => void;
@@ -31,6 +33,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(schema),
   });
+  const { taxDelivery, setTaxDelivery } = useDeliveryStore(({ taxDelivery, setTaxDelivery}) => ({ taxDelivery, setTaxDelivery }));
 
   const { data, addItemPayStep, save } = useSignature()
 
@@ -42,7 +45,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
     titular,
     vencimento,
   }: FieldValues) => {
-    addItemPayStep({ cvv, numeroCartao, parcela, titular, vencimento });
+    addItemPayStep({ cvv, numeroCartao, parcela, titular, vencimento, taxDelivery});
 
     save()
   }

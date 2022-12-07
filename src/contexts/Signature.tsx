@@ -11,11 +11,13 @@ interface SignatureData {
   plan: string;
   planValue: number;
   planId: string;
+  cupomId?: string,
 
   email: string;
   name: string;
   cpf: string;
   telefone: string;
+
 
   bairro: string;
   cep: string;
@@ -24,6 +26,8 @@ interface SignatureData {
   numero?: string;
   rua: string;
   state: string;
+  taxDelivery?: number;
+  deliveryTime?: Date;
 
   cvv?: string;
   numeroCartao?: string;
@@ -36,6 +40,7 @@ interface PlanStep {
   plan: string;
   planValue?: number;
   planId: string;
+  cupomId?: string,
 }
 
 interface PersonalStep {
@@ -61,11 +66,13 @@ interface PayStep {
   parcela?: string;
   titular?: string;
   vencimento?: string;
+  taxDelivery?: number;
+  deliveryTime?: Date;
 }
 
 interface SignatureContextProps {
   data: SignatureData;
-  addItemPlanStep: ({ plan, planValue, planId }: PlanStep) => void;
+  addItemPlanStep: ({ plan, planValue, planId, cupomId }: PlanStep) => void;
   addItemPersonalStep: ({ email, name, cpf, telefone }: PersonalStep) => void;
   addItemAddresStep: ({
     bairro,
@@ -82,6 +89,8 @@ interface SignatureContextProps {
     parcela,
     titular,
     vencimento,
+    taxDelivery,
+    deliveryTime,
   }: PayStep) => void;
   save: () => void;
 }
@@ -97,8 +106,8 @@ const SignatureContext = createContext<SignatureContextProps>(
 export function SignatureContextProvider({ children }: TypeContextProvider) {
   const [data, setData] = useState({} as SignatureData);
 
-  const addItemPlanStep = useCallback(({ plan, planValue, planId }: PlanStep): void => {
-    setData((old) => ({ ...old, plan, planValue, planId }));
+  const addItemPlanStep = useCallback(({ plan, planValue, planId, cupomId }: PlanStep): void => {
+    setData((old) => ({ ...old, plan, planValue, planId, cupomId: cupomId ?? undefined}));
   }, []);
 
   const addItemPersonalStep = ({
@@ -117,7 +126,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     complemento,
     numero,
     rua,
-    state,
+    state
   }: AddresStep): void => {
     setData((old) => ({
       ...old,
@@ -137,18 +146,43 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     parcela,
     titular,
     vencimento,
+    deliveryTime,
+    taxDelivery
   }: PayStep): void => {
     data.cvv = cvv;
     data.numeroCartao = numeroCartao;
     data.parcela = parcela;
     data.titular = titular;
     data.vencimento = vencimento;
+    data.taxDelivery = taxDelivery ?? undefined;
   };
 
   const save = () => {
     console.log("todos -->", data)
-
-    api.post('/api/v1/order/create').then(() =>{
+    const dataInfo = {
+      planId: data.planId,
+      email: data.email,
+      fullName: data.name,
+      cpf: data.cpf,
+      phone: data.numero,
+      street: data.rua,
+      neighbourhood: data.bairro,
+      city: data.city,
+      zipcode: data.cep,
+      state: data.state,
+      country: "BRAZIL",
+      complement: data.complemento,
+      taxDelivery:	data.taxDelivery,
+      totalPrice:	data.planValue,
+      couponId:	data.cupomId,
+      // deliveryTime:	string
+    }
+    api.post('order/create', dataInfo, {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc0Njc4ZTM1LTE2MjItNDk0MC04ZDkxLTBlMTdmZWIzZDFjNSIsImZpcnN0TmFtZSI6IsONdGFsbyIsImxhc3ROYW1lIjoiSU5URUdSQSIsImVtYWlsIjoiaXRhbG9saW1hNTM0QGdtYWlsLmNvbSIsImlhdCI6MTY3MDQxOTc3NywiZXhwIjoxNjcwNTA2MTc3fQ.L8dWiWi-HfGwVLJ4BQQZJKikRccv6y5NmlSKvX7Miqc",
+      },
+    }).then(() =>{
 
     }).catch()
   }

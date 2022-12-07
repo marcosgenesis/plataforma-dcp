@@ -30,14 +30,14 @@ const Signature: NextPage = () => {
   const [cupom, setCupomValue] = useState("");
   const [validCupons, setCupomValids] = useState([]);
   const [isCupomError, setIsCupomError] = useState(false);
-
-  const { changeIsFreeShipping, discount, isFreeShipping, setDiscount } =
+  const { changeIsFreeShipping, discount, isFreeShipping, setDiscount, setCupomId } =
     useCupomStore(
-      ({ changeIsFreeShipping, discount, isFreeShipping, setDiscount }) => ({
+      ({ changeIsFreeShipping, discount, isFreeShipping, setDiscount, setCupomId }) => ({
         changeIsFreeShipping,
         discount,
         isFreeShipping,
         setDiscount,
+        setCupomId,
       })
     );
 
@@ -55,6 +55,8 @@ const Signature: NextPage = () => {
         }
         setIsCupomError(false);
         setCupomValids([...validCupons, cupom]);
+        console.log('response.data.data.id', response.data.data.id)
+        setCupomId(response.data.data.id)
         setDiscount(response.data.data.discount);
         setCupomValue("");
       })
