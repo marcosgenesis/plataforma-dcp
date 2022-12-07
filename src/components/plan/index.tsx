@@ -2,7 +2,7 @@ import React, { InputHTMLAttributes, forwardRef } from "react";
 import { useSignature } from "../../contexts/Signature";
 import { convertMoney } from "../../utils/convertMoney";
 import { Container, DivisionVertical } from "./styled";
-
+import { useCupomStore } from "../../stores/cupom";
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   idSelecPlan: string;
@@ -16,11 +16,17 @@ const Plan: ForwardRefRenderFunction<HTMLInputElement, IProps> = (
   ref
 ) => {
   const { data, addItemPlanStep } = useSignature();
+  const { cupomId } =
+    useCupomStore(
+      ({ cupomId }) => ({
+        cupomId
+      })
+    );
   return (
     <Container
       htmlFor={idSelecPlan}
       onClick={() => {
-        addItemPlanStep({ plan: title, planValue: preco });
+        addItemPlanStep({ plan: title, planValue: preco, planId: idSelecPlan, cupomId: cupomId });
       }}
     >
       <input

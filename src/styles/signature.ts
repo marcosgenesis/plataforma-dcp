@@ -88,16 +88,6 @@ export const ContainerPrice = styled.div`
 export const Cupom = styled.div`
   height: 100px;
 
-  p {
-    font-family: "DM Sans";
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 28px;
-    margin-bottom: 8px;
-
-    color: #333333;
-  }
-
   span {
     font-weight: bold;
     font-size: 12px;
@@ -111,12 +101,25 @@ export const ButtonCode = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+  border: 1px solid;
+  border-color: ${(props) => (props.error ? "red" : 'rgba(0, 0, 0, 0.1)')};
+  border-radius: 8px;
+
+  p {
+    font-family: "DM Sans";
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 8px;
+
+    color: #333333;
+  }
 
   input {
     width: 80%;
     height: 40px;
 
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: none;
     border-right: 1px solid #ccddff;
     border-radius: 8px 0 0 8px;
     padding: 14px 10px;
@@ -139,7 +142,7 @@ export const ButtonCode = styled.div`
     width: 20%;
     height: 40px;
     padding: 8px 24px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: none;
     border-left: transparent;
     border-radius: 0 8px 8px 0;
     box-sizing: border-box;
@@ -159,4 +162,9 @@ export const ButtonCode = styled.div`
 export const Buttons = styled.div`
   display: flex;
   gap: 16px;
+`;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 10px;
 `;
