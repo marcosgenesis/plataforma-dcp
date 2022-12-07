@@ -24,6 +24,8 @@ import {
 import { useRouter } from "next/router";
 import api from "../services/api";
 import { useCupomStore } from "../stores/cupom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1);
@@ -147,6 +149,7 @@ const Signature: NextPage = () => {
         </ContainerPrice>
       </ContainerSignature>
       <Footer expanded />
+      <ToastContainer />
     </Container>
   );
 };

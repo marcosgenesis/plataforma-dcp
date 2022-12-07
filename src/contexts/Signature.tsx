@@ -6,6 +6,8 @@ import React, {
   useState,
 } from "react";
 import api from "../services/api";
+import { ToastContainer, toast } from 'react-toastify';
+import { useRouter } from 'next/router'
 
 interface SignatureData {
   plan: string;
@@ -105,6 +107,7 @@ const SignatureContext = createContext<SignatureContextProps>(
 
 export function SignatureContextProvider({ children }: TypeContextProvider) {
   const [data, setData] = useState({} as SignatureData);
+  const router = useRouter()
 
   const addItemPlanStep = useCallback(({ plan, planValue, planId, cupomId }: PlanStep): void => {
     setData((old) => ({ ...old, plan, planValue, planId, cupomId: cupomId ?? undefined}));
@@ -183,7 +186,10 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
           "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc0Njc4ZTM1LTE2MjItNDk0MC04ZDkxLTBlMTdmZWIzZDFjNSIsImZpcnN0TmFtZSI6IsONdGFsbyIsImxhc3ROYW1lIjoiSU5URUdSQSIsImVtYWlsIjoiaXRhbG9saW1hNTM0QGdtYWlsLmNvbSIsImlhdCI6MTY3MDQxOTc3NywiZXhwIjoxNjcwNTA2MTc3fQ.L8dWiWi-HfGwVLJ4BQQZJKikRccv6y5NmlSKvX7Miqc",
       },
     }).then(() =>{
-
+      toast.success('Assinatura realizada com sucesso');
+      setTimeout(()=>{
+        router.push('/')
+      }, 3500)
     }).catch()
   }
 
