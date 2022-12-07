@@ -25,10 +25,12 @@ const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
 export function AuthContextProvider({ children }: TypeContextProvider) {
   const [data, setData] = useState<AuthData>(() => {
-    const token = localStorage.getItem('@tramaAPP:token');
-
+    if (typeof window !== "undefined"){
+      const token = localStorage.getItem('@tramaAPP:token');
+    
     if (token) {
       return {token} ;
+    }
     }
     return {} as AuthData;
   });
