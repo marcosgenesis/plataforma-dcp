@@ -20,7 +20,7 @@ const Plan: ForwardRefRenderFunction<HTMLInputElement, IProps> = (
     <Container
       htmlFor={idSelecPlan}
       onClick={() => {
-        addItemPlanStep({ plan: title, planValue: preco });
+        addItemPlanStep({ plan: title, planValue: preco, planId: idSelecPlan });
       }}
     >
       <input

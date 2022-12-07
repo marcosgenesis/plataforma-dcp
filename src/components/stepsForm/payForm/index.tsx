@@ -28,13 +28,13 @@ const PayForm: React.FC<PayFormProps> = ({
     resolver: yupResolver(schema),
   });
 
-  const { data, addItemPayStep } = useSignature()
+  const { data, addItemPayStep, save } = useSignature()
 
   const [payActive, setPayActive] = useState(1)
   const handlePay = ({cvv, numeroCartao, parcela, titular, vencimento}: FieldValues) => {
     addItemPayStep({cvv, numeroCartao, parcela, titular, vencimento})
 
-    // nextStep()
+    save()
   }
 
   return (

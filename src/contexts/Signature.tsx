@@ -5,10 +5,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import api from "../services/api";
 
 interface SignatureData {
   plan: string;
-  planValue: string;
+  planValue: number;
+  planId: string;
 
   email: string;
   name: string;
@@ -32,7 +34,8 @@ interface SignatureData {
 
 interface PlanStep {
   plan: string;
-  planValue?: string;
+  planValue?: number;
+  planId: string;
 }
 
 interface PersonalStep {
@@ -62,7 +65,7 @@ interface PayStep {
 
 interface SignatureContextProps {
   data: SignatureData;
-  addItemPlanStep: ({ plan, planValue }: PlanStep) => void;
+  addItemPlanStep: ({ plan, planValue, planId }: PlanStep) => void;
   addItemPersonalStep: ({ email, name, cpf, telefone }: PersonalStep) => void;
   addItemAddresStep: ({
     bairro,
@@ -80,6 +83,7 @@ interface SignatureContextProps {
     titular,
     vencimento,
   }: PayStep) => void;
+  save: () => void;
 }
 
 interface TypeContextProvider {
@@ -93,8 +97,8 @@ const SignatureContext = createContext<SignatureContextProps>(
 export function SignatureContextProvider({ children }: TypeContextProvider) {
   const [data, setData] = useState({} as SignatureData);
 
-  const addItemPlanStep = useCallback(({ plan, planValue }: PlanStep): void => {
-    setData((old) => ({ ...old, plan, planValue }));
+  const addItemPlanStep = useCallback(({ plan, planValue, planId }: PlanStep): void => {
+    setData((old) => ({ ...old, plan, planValue, planId }));
   }, []);
 
   const addItemPersonalStep = ({
@@ -141,6 +145,14 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     data.vencimento = vencimento;
   };
 
+  const save = () => {
+    console.log("todos -->", data)
+
+    api.post('/api/v1/order/create').then(() =>{
+
+    }).catch()
+  }
+
   return (
     <SignatureContext.Provider
       value={{
@@ -149,6 +161,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
         addItemPayStep,
         addItemPersonalStep,
         addItemPlanStep,
+        save,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,6 +10,7 @@ import { FilledButton } from "../../buttons/FilledButton";
 
 import { ContainerForm, MessageErro, Buttons } from "./style";
 import { useSignature } from "../../../contexts/Signature";
+import api from "../../../services/api";
 
 interface PlanProps {
   nextStep: () => void;
@@ -20,30 +21,48 @@ const PlanForm: React.FC<PlanProps> = ({ nextStep, ...rest }) => {
     resolver: yupResolver(schema),
   });
   const { data, addItemPlanStep } = useSignature();
-
+  const [plans, setPlans] = useState([])
   const watchPlan = watch("plan");
 
   const handlePlan = (data: FieldValues) => {
     nextStep();
   };
 
+  const loadPlans = async () => {
+    const response = await api.get('/plans', {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc0Njc4ZTM1LTE2MjItNDk0MC04ZDkxLTBlMTdmZWIzZDFjNSIsImZpcnN0TmFtZSI6IsONdGFsbyIsImxhc3ROYW1lIjoiSU5URUdSQSIsImVtYWlsIjoiaXRhbG9saW1hNTM0QGdtYWlsLmNvbSIsImlhdCI6MTY3MDQxOTc3NywiZXhwIjoxNjcwNTA2MTc3fQ.L8dWiWi-HfGwVLJ4BQQZJKikRccv6y5NmlSKvX7Miqc",
+      },
+    })
+    setPlans(response.data)
+    console.log('planos -->', response.data)
+
+  }
+  useEffect(()=>{
+    loadPlans()
+  },[])
+
   return (
     <>
       <ContainerForm onSubmit={handleSubmit(handlePlan)}>
         <Title>Escolha seu plano de assinatura</Title>
 
-        <Plan
-          idSelecPlan='radio-1'
-          preco={60}
-          title='Lançamento: Coleção completa (oferta limitada)'
-          itensList={[
-            "Receba todas as caixas de uma só vez!",
-            "Parcele em até 8x sem juros no cartão de crédito",
-          ]}
-          {...register("plan")}
-        />
+        { plans.map((plan) => {
+          return (
+            <Plan
+              idSelecPlan={plan.id}
+              preco={plan.price}
+              title={plan.title}
+              itensList={[
+                plan.description
+              ]}
+              {...register("plan")}
+            />
+          )
+        })}
 
-        <Plan
+        {/* <Plan
           idSelecPlan='radio-2'
           preco={1500}
           title='Plano Anual'
@@ -52,7 +71,7 @@ const PlanForm: React.FC<PlanProps> = ({ nextStep, ...rest }) => {
             "Economize R$ 127,00.",
           ]}
           {...register("plan")}
-        />
+        /> */}
 
         {formState.errors.plan && (
           <MessageErro> {formState.errors.plan?.message} </MessageErro>
