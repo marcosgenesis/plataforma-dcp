@@ -20,8 +20,11 @@ import { SocialButton } from "../components/buttons/SocialButton";
 import api from "../services/api";
 
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from "../contexts/auth";
 
 const Auth: NextPage = () => {
+  const { login } = useAuth()
+
   const schema = yup.object().shape({
   })
 
@@ -31,23 +34,16 @@ const Auth: NextPage = () => {
 
   const router = useRouter()
   
-  const handleLogin = (data: FieldValues) => {
+  const handleLogin = async (data: FieldValues) => {
     const { email, password } = data;
     console.log('-->', email, password)
-    
-    api.post('api/v1/auth', {email, password}).then(() => {
+  
+    try {
+      await login({ email, password });
       router.push('/signature')
-    }).catch(()=>{
-      toast.error('Email/Senha incorreto')
-    })
-
-    
-    // try {
-    //   await login({ email, password, whitelabelId });
-    //   // navigate('/beneficios');
-    // } catch (err) {
-    //   toast.error('Email/Senha incorreto');
-    // }
+    } catch (err) {
+      toast.error('Email/Senha incorretos');
+    }
   };
 
   return (
