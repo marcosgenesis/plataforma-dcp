@@ -40,13 +40,19 @@ export function AuthContextProvider({ children }: TypeContextProvider) {
     });
 
     const { token } = response.data;
-    localStorage.setItem('@tramaAPP:token', token);
+    
+    if (typeof window !== "undefined"){
+      localStorage.setItem('@tramaAPP:token', token);
+    }
 
     setData({token});
+
   };
 
   const logout = (): void => {
-    localStorage.clear();
+    if (typeof window !== "undefined") {
+      localStorage.clear();
+    }
 
     setData({} as AuthData);
   };
