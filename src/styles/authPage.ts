@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const AuthFormContainer = styled.div`
+export const AuthFormContainer = styled.form`
   flex: 1;
   height: 600px;
   display: flex;
