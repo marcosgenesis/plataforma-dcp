@@ -19,11 +19,51 @@ import {
   ButtonCode,
   Step,
   Buttons,
+  ErrorMessage,
 } from "../styles/signature";
 import { useRouter } from "next/router";
+import api from "../services/api";
+import { useCupomStore } from "../stores/cupom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1);
+  const [cupom, setCupomValue] = useState("");
+  const [validCupons, setCupomValids] = useState([]);
+  const [isCupomError, setIsCupomError] = useState(false);
+  const { changeIsFreeShipping, discount, isFreeShipping, setDiscount, setCupomId } =
+    useCupomStore(
+      ({ changeIsFreeShipping, discount, isFreeShipping, setDiscount, setCupomId }) => ({
+        changeIsFreeShipping,
+        discount,
+        isFreeShipping,
+        setDiscount,
+        setCupomId,
+      })
+    );
+
+  async function handleApplyCupom() {
+    if (validCupons.some((e) => e === cupom)) {
+      setIsCupomError(true);
+      return;
+    }
+    await api
+      .get(`/coupon/verify/${cupom}`)
+      .then((response) => {
+        if (response.data.titlecode === "FRETEGRATIS") {
+          changeIsFreeShipping();
+          return;
+        }
+        setIsCupomError(false);
+        setCupomValids([...validCupons, cupom]);
+        console.log('response.data.data.id', response.data.data.id)
+        setCupomId(response.data.data.id)
+        setDiscount(response.data.data.discount);
+        setCupomValue("");
+      })
+      .catch((e) => setIsCupomError(true));
+  }
 
   const nextStep = () => {
     setStep(step + 1);
@@ -95,15 +135,21 @@ const Signature: NextPage = () => {
           {step === 1 && (
             <Cupom>
               <p> Aplicar cupom </p>
-              <ButtonCode>
-                <input placeholder='Insira o código do cupom' />
-                <button>Aplicar</button>
+              <ButtonCode error={isCupomError}>
+                <input
+                  value={cupom}
+                  placeholder='Insira o código do cupom'
+                  onChange={(e) => setCupomValue(e.target.value)}
+                />
+                <button onClick={() => handleApplyCupom()}>Aplicar</button>
               </ButtonCode>
+              {isCupomError && <ErrorMessage>Cupom inválido!</ErrorMessage>}
             </Cupom>
           )}
         </ContainerPrice>
       </ContainerSignature>
       <Footer expanded />
+      <ToastContainer />
     </Container>
   );
 };

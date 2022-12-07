@@ -1,12 +1,25 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import api from "../services/api";
+import { ToastContainer, toast } from 'react-toastify';
+import { useRouter } from 'next/router'
 
 interface SignatureData {
   plan: string;
+  planValue: number;
+  planId: string;
+  cupomId?: string,
 
   email: string;
   name: string;
   cpf: string;
   telefone: string;
+
 
   bairro: string;
   cep: string;
@@ -15,6 +28,8 @@ interface SignatureData {
   numero?: string;
   rua: string;
   state: string;
+  taxDelivery?: number;
+  deliveryTime?: Date;
 
   cvv?: string;
   numeroCartao?: string;
@@ -24,14 +39,17 @@ interface SignatureData {
 }
 
 interface PlanStep {
-  plan: string
+  plan: string;
+  planValue?: number;
+  planId: string;
+  cupomId?: string,
 }
 
 interface PersonalStep {
-  email: string
-  name: string
-  cpf: string
-  telefone: string
+  email: string;
+  name: string;
+  cpf: string;
+  telefone: string;
 }
 
 interface AddresStep {
@@ -50,14 +68,33 @@ interface PayStep {
   parcela?: string;
   titular?: string;
   vencimento?: string;
+  taxDelivery?: number;
+  deliveryTime?: Date;
 }
 
 interface SignatureContextProps {
   data: SignatureData;
-  addItemPlanStep: ({ plan }: PlanStep) => void;
-  addItemPersonalStep: ({  email, name, cpf, telefone }: PersonalStep) => void;
-  addItemAddresStep: ({ bairro, cep, city, complemento, numero, rua, state}: AddresStep) => void;
-  addItemPayStep: ({ cvv, numeroCartao, parcela, titular, vencimento }: PayStep) => void;
+  addItemPlanStep: ({ plan, planValue, planId, cupomId }: PlanStep) => void;
+  addItemPersonalStep: ({ email, name, cpf, telefone }: PersonalStep) => void;
+  addItemAddresStep: ({
+    bairro,
+    cep,
+    city,
+    complemento,
+    numero,
+    rua,
+    state,
+  }: AddresStep) => void;
+  addItemPayStep: ({
+    cvv,
+    numeroCartao,
+    parcela,
+    titular,
+    vencimento,
+    taxDelivery,
+    deliveryTime,
+  }: PayStep) => void;
+  save: () => void;
 }
 
 interface TypeContextProvider {
@@ -69,67 +106,103 @@ const SignatureContext = createContext<SignatureContextProps>(
 );
 
 export function SignatureContextProvider({ children }: TypeContextProvider) {
-  const data:SignatureData = {
-    plan: '',
-    email: '',
-    name: '',
-    cpf: '',
-    telefone: '',
+  const [data, setData] = useState({} as SignatureData);
+  const router = useRouter()
 
-    bairro: '',
-    cep: '',
-    city: '',
-    complemento: '',
-    numero: '',
-    rua: '',
-    state: '',
+  const addItemPlanStep = useCallback(({ plan, planValue, planId, cupomId }: PlanStep): void => {
+    setData((old) => ({ ...old, plan, planValue, planId, cupomId: cupomId ?? undefined}));
+  }, []);
 
-    cvv: '',
-    numeroCartao: '',
-    parcela: '',
-    titular: '',
-    vencimento: '',
+  const addItemPersonalStep = ({
+    email,
+    name,
+    cpf,
+    telefone,
+  }: PersonalStep): void => {
+    setData((old) => ({ ...old, email, name, cpf, telefone }));
   };
 
-  const addItemPlanStep = ({ plan }: PlanStep): void => {
-    data.plan = plan
-
-    console.log('data-->', data)
+  const addItemAddresStep = ({
+    bairro,
+    cep,
+    city,
+    complemento,
+    numero,
+    rua,
+    state
+  }: AddresStep): void => {
+    setData((old) => ({
+      ...old,
+      bairro,
+      cep,
+      city,
+      rua,
+      state,
+      complemento: complemento ?? undefined,
+      numero: numero ?? undefined,
+    }));
   };
 
-  const addItemPersonalStep = ({ email, name, cpf, telefone  }: PersonalStep): void => {
-    data.email = email
-    data.name = name
-    data.cpf = cpf
-    data.telefone = telefone
-
-    console.log('data-->', data)
+  const addItemPayStep = ({
+    cvv,
+    numeroCartao,
+    parcela,
+    titular,
+    vencimento,
+    deliveryTime,
+    taxDelivery
+  }: PayStep): void => {
+    data.cvv = cvv;
+    data.numeroCartao = numeroCartao;
+    data.parcela = parcela;
+    data.titular = titular;
+    data.vencimento = vencimento;
+    data.taxDelivery = taxDelivery ?? undefined;
   };
 
-  const addItemAddresStep = ({ bairro, cep, city, complemento, numero, rua, state}: AddresStep): void => {
-    data.bairro = bairro
-    data.cep = cep
-    data.city = city
-    data.rua = rua
-    data.state = state
-    {complemento && (data.complemento = complemento)}
-    {numero && (data.numero = numero)}
+  const save = () => {
+    console.log("todos -->", data)
+    const dataInfo = {
+      planId: data.planId,
+      email: data.email,
+      fullName: data.name,
+      cpf: data.cpf,
+      phone: data.numero,
+      street: data.rua,
+      neighbourhood: data.bairro,
+      city: data.city,
+      zipcode: data.cep,
+      state: data.state,
+      country: "BRAZIL",
+      complement: data.complemento,
+      taxDelivery:	data.taxDelivery,
+      totalPrice:	data.planValue,
+      couponId:	data.cupomId,
+      // deliveryTime:	string
+    }
+    api.post('order/create', dataInfo, {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc0Njc4ZTM1LTE2MjItNDk0MC04ZDkxLTBlMTdmZWIzZDFjNSIsImZpcnN0TmFtZSI6IsONdGFsbyIsImxhc3ROYW1lIjoiSU5URUdSQSIsImVtYWlsIjoiaXRhbG9saW1hNTM0QGdtYWlsLmNvbSIsImlhdCI6MTY3MDQxOTc3NywiZXhwIjoxNjcwNTA2MTc3fQ.L8dWiWi-HfGwVLJ4BQQZJKikRccv6y5NmlSKvX7Miqc",
+      },
+    }).then(() =>{
+      toast.success('Assinatura realizada com sucesso');
+      setTimeout(()=>{
+        router.push('/')
+      }, 3500)
+    }).catch()
+  }
 
-    console.log('data-->', data)
-  };
-
-  const addItemPayStep = ({ cvv, numeroCartao, parcela, titular, vencimento }: PayStep): void => {
-    data.cvv = cvv
-    data.numeroCartao = numeroCartao
-    data.parcela = parcela
-    data.titular = titular
-    data.vencimento = vencimento
-
-    console.log('data-->', data)
-  };
   return (
     <SignatureContext.Provider
-      value={{ data, addItemAddresStep, addItemPayStep, addItemPersonalStep, addItemPlanStep }}
+      value={{
+        data,
+        addItemAddresStep,
+        addItemPayStep,
+        addItemPersonalStep,
+        addItemPlanStep,
+        save,
+      }}
     >
       {children}
     </SignatureContext.Provider>

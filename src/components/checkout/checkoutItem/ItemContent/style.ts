@@ -26,6 +26,7 @@ export const Description = styled.span`
   font-weight: bold;
   font-size: 16px;
   line-height: 24px;
+  text-overflow: ellipsis;
 
   color: #000000;
 `;

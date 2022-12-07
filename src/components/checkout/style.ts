@@ -37,8 +37,14 @@ export const CheckoutContent = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   padding: 16px 0;
 
-  height: 120px;
   gap: 24px;
+
+  p {
+    font-family: "DM Sans";
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 5px;
+  }
 `;
 
 export const CheckoutFooter = styled.div`
