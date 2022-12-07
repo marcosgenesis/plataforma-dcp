@@ -21,9 +21,18 @@ import {
   Buttons,
 } from "../styles/signature";
 import { useRouter } from "next/router";
+import api from "../services/api";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1);
+  const [cupom, setCupomValue] = useState("");
+  const [validCupom, setCupomValid] = useState([]);
+
+  async function handleApplyCupom() {
+    await api
+      .get(`/coupon/verify/${cupom}`)
+      .then(() => setCupomValid([validCupom, cupom]));
+  }
 
   const nextStep = () => {
     setStep(step + 1);
@@ -96,11 +105,17 @@ const Signature: NextPage = () => {
             <Cupom>
               <p> Aplicar cupom </p>
               <ButtonCode>
-                <input placeholder='Insira o código do cupom' />
-                <button>Aplicar</button>
+                <input
+                  placeholder='Insira o código do cupom'
+                  onChange={(e) => setCupomValue(e.target.value)}
+                />
+                <button onClick={() => handleApplyCupom()}>Aplicar</button>
               </ButtonCode>
             </Cupom>
           )}
+          {validCupom.map((i) => (
+            <p>{i}</p>
+          ))}
         </ContainerPrice>
       </ContainerSignature>
       <Footer expanded />

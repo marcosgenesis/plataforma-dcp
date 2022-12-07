@@ -1,7 +1,14 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface SignatureData {
   plan: string;
+  planValue: string;
 
   email: string;
   name: string;
@@ -24,14 +31,15 @@ interface SignatureData {
 }
 
 interface PlanStep {
-  plan: string
+  plan: string;
+  planValue?: string;
 }
 
 interface PersonalStep {
-  email: string
-  name: string
-  cpf: string
-  telefone: string
+  email: string;
+  name: string;
+  cpf: string;
+  telefone: string;
 }
 
 interface AddresStep {
@@ -54,10 +62,24 @@ interface PayStep {
 
 interface SignatureContextProps {
   data: SignatureData;
-  addItemPlanStep: ({ plan }: PlanStep) => void;
-  addItemPersonalStep: ({  email, name, cpf, telefone }: PersonalStep) => void;
-  addItemAddresStep: ({ bairro, cep, city, complemento, numero, rua, state}: AddresStep) => void;
-  addItemPayStep: ({ cvv, numeroCartao, parcela, titular, vencimento }: PayStep) => void;
+  addItemPlanStep: ({ plan, planValue }: PlanStep) => void;
+  addItemPersonalStep: ({ email, name, cpf, telefone }: PersonalStep) => void;
+  addItemAddresStep: ({
+    bairro,
+    cep,
+    city,
+    complemento,
+    numero,
+    rua,
+    state,
+  }: AddresStep) => void;
+  addItemPayStep: ({
+    cvv,
+    numeroCartao,
+    parcela,
+    titular,
+    vencimento,
+  }: PayStep) => void;
 }
 
 interface TypeContextProvider {
@@ -69,67 +91,65 @@ const SignatureContext = createContext<SignatureContextProps>(
 );
 
 export function SignatureContextProvider({ children }: TypeContextProvider) {
-  const data:SignatureData = {
-    plan: '',
-    email: '',
-    name: '',
-    cpf: '',
-    telefone: '',
+  const [data, setData] = useState({} as SignatureData);
 
-    bairro: '',
-    cep: '',
-    city: '',
-    complemento: '',
-    numero: '',
-    rua: '',
-    state: '',
+  const addItemPlanStep = useCallback(({ plan, planValue }: PlanStep): void => {
+    setData((old) => ({ ...old, plan, planValue }));
+  }, []);
 
-    cvv: '',
-    numeroCartao: '',
-    parcela: '',
-    titular: '',
-    vencimento: '',
+  const addItemPersonalStep = ({
+    email,
+    name,
+    cpf,
+    telefone,
+  }: PersonalStep): void => {
+    setData((old) => ({ ...old, email, name, cpf, telefone }));
   };
 
-  const addItemPlanStep = ({ plan }: PlanStep): void => {
-    data.plan = plan
-
-    console.log('data-->', data)
+  const addItemAddresStep = ({
+    bairro,
+    cep,
+    city,
+    complemento,
+    numero,
+    rua,
+    state,
+  }: AddresStep): void => {
+    setData((old) => ({
+      ...old,
+      bairro,
+      cep,
+      city,
+      rua,
+      state,
+      complemento: complemento ?? undefined,
+      numero: numero ?? undefined,
+    }));
   };
 
-  const addItemPersonalStep = ({ email, name, cpf, telefone  }: PersonalStep): void => {
-    data.email = email
-    data.name = name
-    data.cpf = cpf
-    data.telefone = telefone
-
-    console.log('data-->', data)
+  const addItemPayStep = ({
+    cvv,
+    numeroCartao,
+    parcela,
+    titular,
+    vencimento,
+  }: PayStep): void => {
+    data.cvv = cvv;
+    data.numeroCartao = numeroCartao;
+    data.parcela = parcela;
+    data.titular = titular;
+    data.vencimento = vencimento;
   };
 
-  const addItemAddresStep = ({ bairro, cep, city, complemento, numero, rua, state}: AddresStep): void => {
-    data.bairro = bairro
-    data.cep = cep
-    data.city = city
-    data.rua = rua
-    data.state = state
-    {complemento && (data.complemento = complemento)}
-    {numero && (data.numero = numero)}
-
-    console.log('data-->', data)
-  };
-
-  const addItemPayStep = ({ cvv, numeroCartao, parcela, titular, vencimento }: PayStep): void => {
-    data.cvv = cvv
-    data.numeroCartao = numeroCartao
-    data.parcela = parcela
-    data.titular = titular
-    data.vencimento = vencimento
-
-    console.log('data-->', data)
-  };
   return (
     <SignatureContext.Provider
-      value={{ data, addItemAddresStep, addItemPayStep, addItemPersonalStep, addItemPlanStep }}
+      value={{
+        data,
+        addItemAddresStep,
+        addItemPayStep,
+        addItemPersonalStep,
+        addItemPlanStep,
+      }}
     >
       {children}
     </SignatureContext.Provider>

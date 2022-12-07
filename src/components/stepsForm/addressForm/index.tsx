@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import schema from './validation'
+import schema from "./validation";
 
 import Title from "../../title";
-import { FilledButton } from "../../buttons/FilledButton"
-import { LineButtonForm } from "../../buttons/LineButtonForm"
+import { FilledButton } from "../../buttons/FilledButton";
+import { LineButtonForm } from "../../buttons/LineButtonForm";
 
-import {ContainerForm, Buttons, InLine} from './style'
+import { ContainerForm, Buttons, InLine } from "./style";
 import Input from "../../input";
 import Select from "../../select";
 import { useSignature } from "../../../contexts/Signature";
@@ -20,82 +20,72 @@ interface AddressFormProps {
 }
 
 interface ViaCepProps {
-  cep?: string
-  uf: string
-  localidade: string
-  logradouro: string
-  bairro: string
+  cep?: string;
+  uf: string;
+  localidade: string;
+  logradouro: string;
+  bairro: string;
 }
 
-const AddressForm: React.FC<AddressFormProps> = ({
-  backStep,
-  nextStep,
-}) => {
-
+const AddressForm: React.FC<AddressFormProps> = ({ backStep, nextStep }) => {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
-  const { register, setValue, handleSubmit, formState, watch } = useForm({
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState,
+    watch,
+    reset,
+    clearErrors,
+  } = useForm({
     resolver: yupResolver(schema),
   });
   const watchState = watch("state");
-
-  const { data, addItemAddresStep } = useSignature()
+  console.log(formState.errors);
   
-  const handlePersonal = ({bairro, cep, city, rua, state, complemento, numero}: FieldValues) => {
-    addItemAddresStep({bairro, cep, city, rua, state, complemento, numero})
-    nextStep()
-  }
+  const { data, addItemAddresStep } = useSignature();
 
-  const resertValueInputs = (data: ViaCepProps) => {
-    setValue("rua", data.logradouro)
-    setValue("bairro", data.bairro)
-    setValue("city", data.localidade)
-    setValue("state", data.uf)
-  }
+  const handlePersonal = ({
+    bairro,
+    cep,
+    city,
+    rua,
+    state,
+    complemento,
+    numero,
+  }: FieldValues) => {
+    addItemAddresStep({ bairro, cep, city, rua, state, complemento, numero });
+    nextStep();
+  };
 
   const setValuesInputs = (data: ViaCepProps) => {
-    setValue("rua", data.logradouro)
-    setValue("bairro", data.bairro)
-    setValue("city", data.localidade)
-    setValue("state", data.uf)
-  }
-
+    setValue("rua", data.logradouro);
+    setValue("bairro", data.bairro);
+    setValue("city", data.localidade);
+    setValue("state", data.uf);
+    setValue("numero", data.numero);
+    clearErrors("rua");
+    clearErrors("bairro");
+    clearErrors("numero");
+    clearErrors("city");
+  };
 
   const onBlurAddressCEP = (event) => {
-    const { value } = event.target
+    const { value } = event.target;
 
-    const cep = value?.replace(/[^0-9]/g, '')
-
+    const cep = value?.replace(/[^0-9]/g, "");
     if (cep?.length !== 8) {
-      //   isso é para zerar informações que possao estar la
-      const dataViaCEP = {
-        uf: '',
-        localidade: '',
-        logradouro: '',
-        bairro: '',
-      }
-
-      resertValueInputs(dataViaCEP)
-
-      return
+      return;
     }
 
     fetch(`https://viacep.com.br/ws/${cep}/json`)
       .then((response) => response.json())
       .then((data) => {
         if (data?.erro) {
-          //   isso é para zerar informações que possao estar la
-          const dataViaCEP = {
-            uf: '',
-            localidade: '',
-            logradouro: '',
-            bairro: '',
-          }
-    
-          resertValueInputs(dataViaCEP)
-
-          return
+          reset();
+          return;
         }
 
         const dataViaCep = {
@@ -103,12 +93,10 @@ const AddressForm: React.FC<AddressFormProps> = ({
           localidade: data.localidade,
           logradouro: data.logradouro,
           bairro: data.bairro,
-        }
-        
-        setValuesInputs(dataViaCep)
-        
-      })
-  }
+        };
+        setValuesInputs(dataViaCep);
+      });
+  };
 
   useEffect(() => {
     const response = axios({
@@ -152,8 +140,13 @@ const AddressForm: React.FC<AddressFormProps> = ({
             color={"rgba(0, 0, 0, 0.66)"}
             onBlur={onBlurAddressCEP}
           />
-          <a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank" rel="noreferrer" >Não sei o meu CEP</a>
-
+          <a
+            href='https://buscacepinter.correios.com.br/app/endereco/index.php'
+            target='_blank'
+            rel='noreferrer'
+          >
+            Não sei o meu CEP
+          </a>
         </div>
 
         <Input
@@ -164,13 +157,13 @@ const AddressForm: React.FC<AddressFormProps> = ({
           color={"rgba(0, 0, 0, 0.66)"}
         />
       </InLine>
-     
 
       <InLine>
         <div>
           <Input
             name='numero'
             label='Número'
+            error={formState.errors.numero}
             {...register("numero")}
             color={"rgba(0, 0, 0, 0.66)"}
           />
@@ -182,11 +175,9 @@ const AddressForm: React.FC<AddressFormProps> = ({
           {...register("complemento")}
           color={"rgba(0, 0, 0, 0.66)"}
         />
-       
       </InLine>
 
       <InLine>
-       
         <Input
           name='bairro'
           label='Bairro'
@@ -194,8 +185,8 @@ const AddressForm: React.FC<AddressFormProps> = ({
           error={formState.errors.bairro}
           color={"rgba(0, 0, 0, 0.66)"}
         />
-       
-       <Select
+
+        <Select
           name='state'
           options={states}
           label='UF'
@@ -216,11 +207,17 @@ const AddressForm: React.FC<AddressFormProps> = ({
       </InLine>
 
       <Buttons>
-        <LineButtonForm  type="button" width="110px" onClick={backStep}> Voltar  </LineButtonForm>
-        <FilledButton width="110px" type="submit" > Próximo  </FilledButton>
+        <LineButtonForm type='button' width='110px' onClick={backStep}>
+          {" "}
+          Voltar{" "}
+        </LineButtonForm>
+        <FilledButton width='110px' type='submit'>
+          {" "}
+          Próximo{" "}
+        </FilledButton>
       </Buttons>
     </ContainerForm>
-  )
-}
+  );
+};
 
-export default AddressForm
+export default AddressForm;
