@@ -7,8 +7,8 @@ const schema = yup.object().shape({
     .min(3, "O nome precisa ter no mínimo 3 caracteres"),
   cpf: yup
     .string()
-    .required("O cpf é obrigatório")
-    .min(11, "O CPF precisa ter 11 digítos"),
+    .matches(/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/, "Isso não é um CPF")
+    .required("O CPF é obrigatório"),
   email: yup
     .string()
     .email("Isso não é um email")

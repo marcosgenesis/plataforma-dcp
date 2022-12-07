@@ -43,7 +43,6 @@ const AddressForm: React.FC<AddressFormProps> = ({ backStep, nextStep }) => {
     resolver: yupResolver(schema),
   });
   const watchState = watch("state");
-  console.log(formState.errors);
   
   const { data, addItemAddresStep } = useSignature();
 

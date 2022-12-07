@@ -9,12 +9,18 @@ import {
   CheckoutHeader,
   Container,
 } from "./style";
+import { ContainerTotal } from "./checkoutItem/ItemFooter/style";
+
 import { useSignature } from "../../contexts/Signature";
 import api from "../../services/api";
+import { useCupomStore } from "../../stores/cupom";
+import { Description } from "./checkoutItem/ItemContent/style";
 
 const Checkout: React.FC = () => {
   const { data } = useSignature();
   const [frete, setFrete] = useState({});
+  const [total, setTotal] = useState(0);
+  const { discount } = useCupomStore(({ discount }) => ({ discount }));
 
   useEffect(() => {
     async function handleGetFrete() {
@@ -31,6 +37,15 @@ const Checkout: React.FC = () => {
 
     handleGetFrete();
   }, [data.cep]);
+
+  useEffect(() => {
+    if (data.plan || frete.Valor) {
+      const cust =
+        data.planValue +
+          Number(frete.Valor ? frete.Valor.replace(",", ".") : 0) ?? 0;
+      setTotal(cust - discount);
+    }
+  }, [data.plan, data.planValue, discount, frete.Valor]);
 
   return (
     <Container>
@@ -51,22 +66,27 @@ const Checkout: React.FC = () => {
           description={data.plan}
           value={data.planValue}
         />
-        <ChekcoutItemContent title='ENTREGA' value={frete.valor ?? 0} />
+        <ChekcoutItemContent
+          title='ENTREGA'
+          description={frete.Valor ? 'Frete' : ''}
+          value={frete.Valor}
+        >
+          {frete.Valor && (
+            <>
+              {" "}
+              <p>{`${data.cep}`}</p>
+              <p>{`${data.rua} - ${data.city}/${data.state}`}</p>
+            </>
+          )}
+        </ChekcoutItemContent>
         <ChekcoutItemContent title='CUPOM' />
       </CheckoutContent>
 
       <CheckoutFooter>
         <CheckoutItemFooter title='Item' value={data.planValue ?? 0} />
         <CheckoutItemFooter title='Frete' value={frete.Valor ?? 0} />
-        <CheckoutItemFooter title='Cupom' value={0} />
-        <CheckoutItemFooter
-          title='Total'
-          value={
-            data.planValue +
-              Number(frete.Valor ? frete.Valor.replace(",", ".") : 0) ?? 0
-          }
-          isPriceTotal
-        />
+        <CheckoutItemFooter title='Cupom' value={discount} />
+        <CheckoutItemFooter title='Total' value={total} isPriceTotal />
       </CheckoutFooter>
     </Container>
   );
