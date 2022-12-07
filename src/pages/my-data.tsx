@@ -3,7 +3,7 @@ import Sidebar from "../components/sidebar";
 
 const MyData: React.FC = () => {
   return (
-    <Sidebar />
+    <Sidebar expanded={false}/>
   )
 }
 

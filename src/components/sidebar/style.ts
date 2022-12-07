@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  width: 312px;
+`;
 
 export const Content = styled.div`
   display: flex;
@@ -43,6 +45,8 @@ export const ButtonMenu = styled.div`
   cursor: pointer;
   width: 100%;
   display: flex;
+  width: 264px;
+  background: ${(props) => (props.active ? "E6EEFF" : "transparent")};
   align-items: center;
   /* justify-content: center; */
   padding: 8px 16px;
@@ -60,10 +64,14 @@ export const ButtonMenu = styled.div`
 
     text-align: center;
 
-    color: #000000;
+    color: ${(props) => (props.active ? "#0055FF" : "#000000")};
 
     flex: none;
     order: 1;
     flex-grow: 0;
+  }
+
+  svg {
+    fill: ${(props) => (props.active ? "#0055FF" : "#000000")};
   }
 `;
