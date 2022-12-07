@@ -47,7 +47,6 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
     save()
   }
     // nextStep()
-  };
 
   useEffect(() => {
     console.log(data);
