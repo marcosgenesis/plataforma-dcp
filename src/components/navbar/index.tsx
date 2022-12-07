@@ -31,7 +31,9 @@ const Navbar: React.FC = () => {
       </LeftContent>
       <Actions>
         <LineButton>Entrar</LineButton>
-        <FilledButton>Assinar Agora</FilledButton>
+        <Link href="/signature">
+          <FilledButton>Assinar Agora</FilledButton>
+        </Link>
       </Actions>
     </Container>
   );

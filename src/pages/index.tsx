@@ -327,7 +327,7 @@ const Home: NextPage = () => {
               para continuar a história?
             </p>
           </Box>
-          <Box>
+          <Box onClick={()=>router}>
             <Image
               src='/box1.png'
               alt='Step one'
