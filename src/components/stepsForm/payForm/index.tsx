@@ -1,57 +1,75 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import schema from './validation'
+import schema from "./validation";
 
 import Title from "../../title";
-import { FilledButton } from "../../buttons/FilledButton"
-import { LineButtonForm } from "../../buttons/LineButtonForm"
+import { FilledButton } from "../../buttons/FilledButton";
+import { LineButtonForm } from "../../buttons/LineButtonForm";
 
-import {ContainerForm, Buttons, InLine, PayActive, PayActiveContainer, TicketContainer} from './style'
+import {
+  ContainerForm,
+  Buttons,
+  InLine,
+  PayActive,
+  PayActiveContainer,
+  TicketContainer,
+} from "./style";
 import Input from "../../input";
 import Select from "../../select";
 import { useSignature } from "../../../contexts/Signature";
+import { addDays, format } from "date-fns";
 
 interface PayFormProps {
   nextStep: () => void;
   backStep: () => void;
 }
 
-const PayForm: React.FC<PayFormProps> = ({
-  backStep,
-  nextStep,
-}) => {
-
-
+const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
+  const [options, setoptions] = useState([]);
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(schema),
   });
 
   const { data, addItemPayStep, save } = useSignature()
 
-  const [payActive, setPayActive] = useState(1)
-  const handlePay = ({cvv, numeroCartao, parcela, titular, vencimento}: FieldValues) => {
-    addItemPayStep({cvv, numeroCartao, parcela, titular, vencimento})
+  const [payActive, setPayActive] = useState(1);
+  const handlePay = ({
+    cvv,
+    numeroCartao,
+    parcela,
+    titular,
+    vencimento,
+  }: FieldValues) => {
+    addItemPayStep({ cvv, numeroCartao, parcela, titular, vencimento });
 
     save()
   }
+    // nextStep()
+  };
+
+  useEffect(() => {
+    console.log(data);
+    if (data.planValue > 100) {
+      const results = [1, 2, 3, 4, 5, 6].map((v) => ({
+        label: `${v}x de R$ ${Number(data.planValue / v).toFixed(2)}`,
+        value: data.planValue / v,
+      }));
+      setoptions(results);
+    }
+    setoptions([{label:`1x de R$ ${data.planValue.toFixed(2)}`,value:data.planValue}]);
+  }, [data]);
 
   return (
     <ContainerForm onSubmit={handleSubmit(handlePay)}>
       <Title>Defina a forma de pagamento</Title>
-      
+
       <PayActiveContainer>
-        <PayActive 
-          isCurrent={ payActive === 1 }
-          onClick={() => setPayActive(1)}
-        >
+        <PayActive isCurrent={payActive === 1} onClick={() => setPayActive(1)}>
           Cartão de crédito
         </PayActive>
-        <PayActive 
-          isCurrent={ payActive === 2 }
-          onClick={() => setPayActive(2)}
-        >
+        <PayActive isCurrent={payActive === 2} onClick={() => setPayActive(2)}>
           Boleto
         </PayActive>
       </PayActiveContainer>
@@ -68,7 +86,6 @@ const PayForm: React.FC<PayFormProps> = ({
           </InLine>
 
           <InLine>
-          
             <Input
               name='cvv'
               label='CVV'
@@ -76,8 +93,8 @@ const PayForm: React.FC<PayFormProps> = ({
               error={formState.errors.cvv}
               color={"rgba(0, 0, 0, 0.66)"}
             />
-          
-          <Input
+
+            <Input
               name='vencimento'
               label='Vencimento (MM/AA)'
               {...register("vencimento")}
@@ -87,7 +104,7 @@ const PayForm: React.FC<PayFormProps> = ({
 
             <Select
               name='parcelas'
-              options={[{label: '1 x R$ 600,00', value: 600}, {label:'2 x R$ 300,00', value:300}]}
+              options={options}
               label='Parcelas'
               error={formState.errors.parcela}
               {...register("parcela")}
@@ -103,11 +120,9 @@ const PayForm: React.FC<PayFormProps> = ({
               color={"rgba(0, 0, 0, 0.66)"}
               error={formState.errors.titular}
             />
-          
           </InLine>
         </>
       )}
-
 
       {payActive === 2 && (
         <>
@@ -119,22 +134,34 @@ const PayForm: React.FC<PayFormProps> = ({
               height={95}
             />
             <div>
-              <h2>Este pagamento é a vista. O prazo de vencimento deste boleto é 23/11/2022.</h2>
-              <p> O prazo de entrega será contado após 1º dia útil da aprovação do pedido.  
-                Este procedimento costuma ocorrer em até 24 horas, mas se o pagamento for realizado por boleto bancário, 
-                o banco tem o prazo de até três dias úteis para confirmar </p>
+              <h2>
+                Este pagamento é a vista. O prazo de vencimento deste boleto é{" "}
+                {format(addDays(new Date(), 7), "dd/MM/yyyy")}.
+              </h2>
+              <p>
+                {" "}
+                O prazo de entrega será contado após 1º dia útil da aprovação do
+                pedido. Este procedimento costuma ocorrer em até 24 horas, mas
+                se o pagamento for realizado por boleto bancário, o banco tem o
+                prazo de até três dias úteis para confirmar{" "}
+              </p>
             </div>
           </TicketContainer>
         </>
       )}
-      
 
       <Buttons>
-        <LineButtonForm  type="button" width="110px" onClick={backStep}> Voltar  </LineButtonForm>
-        <FilledButton width="210px" type="submit" > Confirmar pagamento  </FilledButton>
+        <LineButtonForm type='button' width='110px' onClick={backStep}>
+          {" "}
+          Voltar{" "}
+        </LineButtonForm>
+        <FilledButton width='210px' type='submit'>
+          {" "}
+          Confirmar pagamento{" "}
+        </FilledButton>
       </Buttons>
     </ContainerForm>
-  )
-}
+  );
+};
 
-export default PayForm
+export default PayForm;

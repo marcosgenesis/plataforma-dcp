@@ -19,19 +19,46 @@ import {
   ButtonCode,
   Step,
   Buttons,
+  ErrorMessage,
 } from "../styles/signature";
 import { useRouter } from "next/router";
 import api from "../services/api";
+import { useCupomStore } from "../stores/cupom";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1);
   const [cupom, setCupomValue] = useState("");
-  const [validCupom, setCupomValid] = useState([]);
+  const [validCupons, setCupomValids] = useState([]);
+  const [isCupomError, setIsCupomError] = useState(false);
+
+  const { changeIsFreeShipping, discount, isFreeShipping, setDiscount } =
+    useCupomStore(
+      ({ changeIsFreeShipping, discount, isFreeShipping, setDiscount }) => ({
+        changeIsFreeShipping,
+        discount,
+        isFreeShipping,
+        setDiscount,
+      })
+    );
 
   async function handleApplyCupom() {
+    if (validCupons.some((e) => e === cupom)) {
+      setIsCupomError(true);
+      return;
+    }
     await api
       .get(`/coupon/verify/${cupom}`)
-      .then(() => setCupomValid([validCupom, cupom]));
+      .then((response) => {
+        if (response.data.titlecode === "FRETEGRATIS") {
+          changeIsFreeShipping();
+          return;
+        }
+        setIsCupomError(false);
+        setCupomValids([...validCupons, cupom]);
+        setDiscount(response.data.data.discount);
+        setCupomValue("");
+      })
+      .catch((e) => setIsCupomError(true));
   }
 
   const nextStep = () => {
@@ -104,18 +131,17 @@ const Signature: NextPage = () => {
           {step === 1 && (
             <Cupom>
               <p> Aplicar cupom </p>
-              <ButtonCode>
+              <ButtonCode error={isCupomError}>
                 <input
+                  value={cupom}
                   placeholder='Insira o código do cupom'
                   onChange={(e) => setCupomValue(e.target.value)}
                 />
                 <button onClick={() => handleApplyCupom()}>Aplicar</button>
               </ButtonCode>
+              {isCupomError && <ErrorMessage>Cupom inválido!</ErrorMessage>}
             </Cupom>
           )}
-          {validCupom.map((i) => (
-            <p>{i}</p>
-          ))}
         </ContainerPrice>
       </ContainerSignature>
       <Footer expanded />
