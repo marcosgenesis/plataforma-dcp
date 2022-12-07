@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../../contexts/auth";
 import { FilledButton } from "../../buttons/FilledButton";
 import { LineButton } from "../../buttons/LineButton";
 import Input from "../../input";
@@ -13,7 +14,17 @@ import {
 } from "./styles";
 
 const Personal: React.FC = () => {
-  const { register, formState } = useForm();
+  const { register, formState, setValue } = useForm();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      setValue("email", user.email);
+      setValue("cpf", user.cpf);
+      setValue("fullname", `${user.firstName} ${user.lastName}`);
+      setValue("phone", user.phone);
+    }
+  }, [user, setValue]);
 
   return (
     <Container>
@@ -27,7 +38,7 @@ const Personal: React.FC = () => {
           <Input
             name='email'
             label='Email'
-            {...register("cpemail")}
+            {...register("email")}
             error={formState.errors.numeroCartao}
             color={"rgba(0, 0, 0, 0.66)"}
           />
