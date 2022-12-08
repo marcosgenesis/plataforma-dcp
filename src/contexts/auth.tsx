@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
-import api from '../services/api';
-
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { setCookie, parseCookies, destroyCookie } from "nookies";
+import api from "../services/api";
 
 interface AuthData {
   token: string;
@@ -8,6 +8,25 @@ interface AuthData {
 
 interface AuthContextProps {
   data: AuthData;
+  user: {
+    avatar: string;
+    birthdate: string;
+    city: string;
+    country: string;
+    cpf: string;
+    createdAt: string;
+    email: string;
+    firstName: string;
+    gender: string;
+    id: string;
+    lastName: string;
+    neighbourhood: string;
+    phone: string;
+    state: string;
+    street: string;
+    updatedAt: string;
+    zipcode: string;
+  };
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
 }
@@ -24,41 +43,58 @@ interface TypeContextProvider {
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
 
 export function AuthContextProvider({ children }: TypeContextProvider) {
+  const cookies = parseCookies();
+  const token = cookies["@tramaAPP:token"];
+  const [user, setUser] = useState(null);
   const [data, setData] = useState<AuthData>(() => {
-    const token = localStorage.getItem('@tramaAPP:token');
-
     if (token) {
-      return {token} ;
+      return { token };
     }
     return {} as AuthData;
   });
 
+  useEffect(() => {
+    async function loadUser() {
+      if (token) {
+        const userResponse = await api.get("/user", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(userResponse.data);
+        return;
+      }
+      setUser(null);
+    }
+    loadUser();
+  }, [token]);
+
   const login = async ({ email, password }: LoginCredentials) => {
-    const response = await api.post('api/v1/auth', {
+    const response = await api.post("/auth", {
       email,
       password,
     });
 
     const { token } = response.data;
-    
-    if (typeof window !== "undefined"){
-      localStorage.setItem('@tramaAPP:token', token);
-    }
+    setCookie(undefined, "@tramaAPP:token", token, {
+      maxAge: 60 * 60 * 24 * 60,
+      path: "/",
+    });
 
-    setData({token});
+    const userResponse = await api.get("/user", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setUser(userResponse.data);
 
+    setData({ token });
   };
 
   const logout = (): void => {
-    if (typeof window !== "undefined") {
-      localStorage.clear();
-    }
+    destroyCookie("@tramaAPP:token");
 
     setData({} as AuthData);
   };
 
   return (
-    <AuthContext.Provider value={{ data, login, logout }}>
+    <AuthContext.Provider value={{ data, login, logout, user }}>
       {children}
     </AuthContext.Provider>
   );
@@ -66,6 +102,6 @@ export function AuthContextProvider({ children }: TypeContextProvider) {
 
 export function useAuth(): AuthContextProps {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be within an AuthProvider');
+  if (!context) throw new Error("useAuth must be within an AuthProvider");
   return context;
 }

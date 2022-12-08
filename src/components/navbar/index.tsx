@@ -1,12 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useAuth } from "../../contexts/auth";
 import { FilledButton } from "../buttons/FilledButton";
 import { LineButton } from "../buttons/LineButton";
 
 import { Actions, Container, LeftContent } from "./styles";
 
 const Navbar: React.FC = () => {
+  const { user } = useAuth();
+  console.log({ user });
+
   return (
     <Container>
       <LeftContent>
@@ -30,8 +34,29 @@ const Navbar: React.FC = () => {
         </ul>
       </LeftContent>
       <Actions>
-        <LineButton>Entrar</LineButton>
-        <Link href="/signature">
+        {!!user ? (
+          <Link href='/my-data'>
+            <LineButton>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "16px" }}
+              >
+                <Image
+                  src='/avatar.svg'
+                  alt='avatar profile'
+                  width={32}
+                  height={32}
+                />
+                <p>{user.firstName}</p>
+                <p>{user.lastName}</p>
+              </div>
+            </LineButton>
+          </Link>
+        ) : (
+          <Link href='/authentication'>
+            <LineButton>Entrar</LineButton>
+          </Link>
+        )}
+        <Link href='/signature'>
           <FilledButton>Assinar Agora</FilledButton>
         </Link>
       </Actions>
