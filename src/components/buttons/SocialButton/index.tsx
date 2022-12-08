@@ -16,6 +16,7 @@ export const SocialButton: React.FC<GoogleButtonContainer> = ({
     <GoogleButtonContainer width={width}>
       <div className="icon">
         <Image
+          alt="social button google"
           src={"/icon-google.svg"}
           width={20}
           height={20}
