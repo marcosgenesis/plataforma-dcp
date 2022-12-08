@@ -53,7 +53,9 @@ const Home: NextPage = () => {
               você despertar a sua criatividade.
             </p>
           </div>
-          <FilledButton width='160px'>Assinar Agora</FilledButton>
+          <Link href='/signature'>
+            <FilledButton width='160px'>Assinar Agora</FilledButton>
+          </Link>
         </div>
         <Image
           src='/landing-page-woman.svg'
