@@ -180,12 +180,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
       couponId:	data.cupomId,
       // deliveryTime:	string
     }
-    api.post('order/create', dataInfo, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc0Njc4ZTM1LTE2MjItNDk0MC04ZDkxLTBlMTdmZWIzZDFjNSIsImZpcnN0TmFtZSI6IsONdGFsbyIsImxhc3ROYW1lIjoiSU5URUdSQSIsImVtYWlsIjoiaXRhbG9saW1hNTM0QGdtYWlsLmNvbSIsImlhdCI6MTY3MDQxOTc3NywiZXhwIjoxNjcwNTA2MTc3fQ.L8dWiWi-HfGwVLJ4BQQZJKikRccv6y5NmlSKvX7Miqc",
-      },
-    }).then(() =>{
+    api.post('order/create', dataInfo).then(() =>{
       toast.success('Assinatura realizada com sucesso');
       setTimeout(()=>{
         router.push('/')
