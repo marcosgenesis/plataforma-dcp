@@ -21,6 +21,7 @@ import Select from "../../select";
 import { useSignature } from "../../../contexts/Signature";
 import { addDays, format } from "date-fns";
 import { useDeliveryStore } from "../../../stores/delivery";
+import { useAuth } from "../../../contexts/auth";
 
 
 interface PayFormProps {
@@ -35,8 +36,8 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   });
   const { taxDelivery, setTaxDelivery } = useDeliveryStore(({ taxDelivery, setTaxDelivery}) => ({ taxDelivery, setTaxDelivery }));
 
-  const { data, addItemPayStep, save } = useSignature()
-
+  const { data, addItemPayStep, save, addItemPersonalStep, addItemAddresStep } = useSignature()
+  const {user} = useAuth()
   const [payActive, setPayActive] = useState(1);
   const handlePay = ({
     cvv,
@@ -51,12 +52,26 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   }
     // nextStep()
 
+  useEffect(()=>{
+    if(user){
+      addItemPersonalStep({cpf: user.cpf, email: user.email, name: `${user.firstName} ${user.lastName}`, telefone: user.phone })
+      addItemAddresStep({
+        bairro: user.neighbourhood,
+        cep: user.zipcode,
+        city: user.zipcode,
+        rua: user.street,
+        state: user.state,
+        complemento: "",
+        numero: ""
+      })
+    }
+  }, [user])
   useEffect(() => {
     console.log(data);
     if (data.planValue > 100) {
       const results = [1, 2, 3, 4, 5, 6].map((v) => ({
-        label: `${v}x de R$ ${Number(data.planValue / v).toFixed(2)}`,
-        value: data.planValue / v,
+        label: `${v}x de R$ ${Number(data?.planValue / v).toFixed(2)}`,
+        value: data?.planValue / v,
       }));
       setoptions(results);
     }

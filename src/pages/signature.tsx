@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { parseCookies } from "nookies";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import Checkout from "../components/checkout";
@@ -43,6 +44,9 @@ const Signature: NextPage = () => {
       })
     );
 
+  const cookies = parseCookies();
+  const token = cookies["@tramaAPP:token"];
+
   async function handleApplyCupom() {
     if (validCupons.some((e) => e === cupom)) {
       setIsCupomError(true);
@@ -66,10 +70,20 @@ const Signature: NextPage = () => {
   }
 
   const nextStep = () => {
+    if(token) {
+      setStep(4)
+      return
+    }
+
     setStep(step + 1);
+
   };
 
   const backStep = () => {
+    if(token) {
+      setStep(1)
+      return
+    }
     setStep(step - 1);
   };
 
@@ -89,26 +103,29 @@ const Signature: NextPage = () => {
               <span> Plano </span>
               <div className='division' />
             </Step>
+            {!token && (
+              <>
+                <Step isCurrent={step === 2} isCompleted={step > 2}>
+                  {step > 2 ? (
+                    <div className='step-number'> &#10003; </div>
+                  ) : (
+                    <div className='step-number'> 2 </div>
+                  )}
+                  <span> Identificação </span>
+                  <div className='division' />
+                </Step>
 
-            <Step isCurrent={step === 2} isCompleted={step > 2}>
-              {step > 2 ? (
-                <div className='step-number'> &#10003; </div>
-              ) : (
-                <div className='step-number'> 2 </div>
-              )}
-              <span> Identificação </span>
-              <div className='division' />
-            </Step>
-
-            <Step isCurrent={step === 3} isCompleted={step > 3}>
-              {step > 3 ? (
-                <div className='step-number'> &#10003; </div>
-              ) : (
-                <div className='step-number'> 3 </div>
-              )}
-              <span> Endereço </span>
-              <div className='division' />
-            </Step>
+                <Step isCurrent={step === 3} isCompleted={step > 3}>
+                  {step > 3 ? (
+                    <div className='step-number'> &#10003; </div>
+                  ) : (
+                    <div className='step-number'> 3 </div>
+                  )}
+                  <span> Endereço </span>
+                  <div className='division' />
+                </Step>
+              </>
+            )}
 
             <Step isCurrent={step === 4} isCompleted={false}>
               <div className='step-number'> 4 </div>

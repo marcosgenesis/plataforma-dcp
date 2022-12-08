@@ -16,9 +16,11 @@ import api from "../../services/api";
 import { useCupomStore } from "../../stores/cupom";
 import { useDeliveryStore } from "../../stores/delivery";
 import { Description } from "./checkoutItem/ItemContent/style";
+import { useAuth } from "../../contexts/auth";
 
 const Checkout: React.FC = () => {
   const { data } = useSignature();
+  const {user} = useAuth()
   const [frete, setFrete] = useState({});
   const [total, setTotal] = useState(0);
   const { discount } = useCupomStore(({ discount }) => ({ discount }));
@@ -27,9 +29,9 @@ const Checkout: React.FC = () => {
     // console.log('-->adad', data?.cep)
     //depoos adicionar a remoção de caracteres
     async function handleGetFrete() {
-      if (data?.cep?.length === 8) {
-        const response = await api.get(`/shipment/calculate/${data.cep}`);
-        console.log('-->',response.data)
+      if (data?.cep?.length || user?.zipcode?.length === 8) {
+        const response = await api.get(`/shipment/calculate/${user?.zipcode ?? data.cep}`);
+        console.log('response -->', response.data)
         setFrete(response.data[0]);
         const value = Number(response.data[0].Valor ? response.data[0].Valor.replace(",", ".") : 0) ?? 0;
         setTaxDelivery(value)
@@ -37,7 +39,7 @@ const Checkout: React.FC = () => {
     }
     
     handleGetFrete();
-  }, [data.cep, setTaxDelivery]);
+  }, [data.cep, setTaxDelivery, user]);
 
   useEffect(() => {
     if (data.plan || frete.Valor) {
@@ -80,7 +82,7 @@ const Checkout: React.FC = () => {
             </>
           )}
         </ChekcoutItemContent>
-        <ChekcoutItemContent title='CUPOM' />
+        <ChekcoutItemContent title='CUPOM' value={discount}/>
       </CheckoutContent>
 
       <CheckoutFooter>
