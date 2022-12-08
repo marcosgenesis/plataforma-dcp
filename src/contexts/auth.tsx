@@ -51,7 +51,6 @@ export function AuthContextProvider({ children }: TypeContextProvider) {
     if (token) {
       return { token };
     }
-    }
     return {} as AuthData;
   });
 
