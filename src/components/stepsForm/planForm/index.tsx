@@ -51,6 +51,7 @@ const PlanForm: React.FC<PlanProps> = ({ nextStep, ...rest }) => {
         { plans.map((plan) => {
           return (
             <Plan
+              key={plan.id}
               idSelecPlan={plan.id}
               preco={plan.price}
               title={plan.title}

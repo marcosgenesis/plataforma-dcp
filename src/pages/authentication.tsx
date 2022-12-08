@@ -21,6 +21,7 @@ import api from "../services/api";
 
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from "../contexts/auth";
+import { withSSRGuest } from "../utils/withSSRGuest";
 
 const Auth: NextPage = () => {
   const { login } = useAuth()
@@ -40,7 +41,7 @@ const Auth: NextPage = () => {
   
     try {
       await login({ email, password });
-      router.push('/signature')
+      router.push('/my-data')
     } catch (err) {
       toast.error('Email/Senha incorretos');
     }
@@ -86,7 +87,6 @@ const Auth: NextPage = () => {
           <FilledButton width="400px" type="submit">
             Entrar
           </FilledButton>
-          <SocialButton width="400px">Entrar com o Google</SocialButton>
         </ButtonContainer>
         <div className="signature">
           <p>Não tem conta?</p>
@@ -101,3 +101,6 @@ const Auth: NextPage = () => {
 };
 
 export default Auth;
+export const getServerSideProps = withSSRGuest(async (ctx) => {
+  return { props: {} };
+});

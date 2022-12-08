@@ -34,3 +34,15 @@ export const Actions = styled.div`
   display: flex;
   gap: 16px
 `;
+export const LoggedArea = styled.div`
+display: flex;
+gap: 16px;
+`;
+export const LogoutButton = styled.p`
+  color: #0055ff;
+  font-weight:bold;
+  cursor: pointer;
+  &:hover{
+    filter:brightness(0.6) ;
+  }
+`;

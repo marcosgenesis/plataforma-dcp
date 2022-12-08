@@ -1,12 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useAuth } from "../../contexts/auth";
 import { FilledButton } from "../buttons/FilledButton";
 import { LineButton } from "../buttons/LineButton";
 
-import { Actions, Container, LeftContent } from "./styles";
+import { Actions, Container, LeftContent, LoggedArea, LogoutButton } from "./styles";
 
 const Navbar: React.FC = () => {
+  const { user,logout } = useAuth();
+
   return (
     <Container>
       <LeftContent>
@@ -30,10 +33,28 @@ const Navbar: React.FC = () => {
         </ul>
       </LeftContent>
       <Actions>
-        <LineButton>Entrar</LineButton>
-        <Link href="/signature">
-          <FilledButton>Assinar Agora</FilledButton>
-        </Link>
+        {!!user ? (
+          <LoggedArea>
+            <LogoutButton onClick={()=>logout()}>Sair</LogoutButton>
+            <Link href='/my-data'>
+              <Image
+                src='/avatar.svg'
+                alt='avatar profile'
+                width={32}
+                height={32}
+              />
+            </Link>
+          </LoggedArea>
+        ) : (
+          <Link href='/authentication'>
+            <LineButton>Entrar</LineButton>
+          </Link>
+        )}
+        {!user && (
+          <Link href='/signature'>
+            <FilledButton>Assinar Agora</FilledButton>
+          </Link>
+        )}
       </Actions>
     </Container>
   );
