@@ -87,7 +87,6 @@ const Auth: NextPage = () => {
           <FilledButton width="400px" type="submit">
             Entrar
           </FilledButton>
-          <SocialButton width="400px">Entrar com o Google</SocialButton>
         </ButtonContainer>
         <div className="signature">
           <p>Não tem conta?</p>

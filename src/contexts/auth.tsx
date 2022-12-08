@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import api from "../services/api";
+import Router from "next/router";
 
 interface AuthData {
   token: string;
@@ -88,9 +89,9 @@ export function AuthContextProvider({ children }: TypeContextProvider) {
   };
 
   const logout = (): void => {
-    destroyCookie("@tramaAPP:token");
-
+    destroyCookie(undefined,"@tramaAPP:token");
     setData({} as AuthData);
+    Router.push('/authentication')
   };
 
   return (

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styled from "styled-components";
 
 export const Breadcrumbs = styled.ul`
@@ -26,5 +27,19 @@ export const Crumb = styled.li`
     &:active {
       text-decoration: underline;
     }
+  }
+`;
+
+export const BreadCrumbsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+export const Breadcrumb = styled.p`
+  text-decoration: none;
+  cursor: pointer;
+  color: ${(props) => (props.active ? "#0055ff" : "#111")};
+  &:hover {
+    color: #666;
   }
 `;

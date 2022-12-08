@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../../contexts/auth";
+import BreadCrumbs from "../../breadcrumb";
 import { FilledButton } from "../../buttons/FilledButton";
 import { LineButton } from "../../buttons/LineButton";
 import Input from "../../input";
@@ -26,11 +27,21 @@ const Personal: React.FC = () => {
     }
   }, [user, setValue]);
 
+  const breadcrumbs = [
+    {
+      path: "#",
+      label: "Minha Conta",
+    },
+    {
+      path: "#",
+      label: "Meus Dados",
+      active: true,
+    },
+  ];
+
   return (
     <Container>
-      <div className='breadcrumbs'>
-        <a href=''>Minha Conta</a> <p>/</p> <a href=''>Meus Dados</a>
-      </div>
+      <BreadCrumbs breadcrumbs={breadcrumbs} />
       <h1>Meus dados</h1>
       <InfoContainer>
         <PersonalDataContainer>

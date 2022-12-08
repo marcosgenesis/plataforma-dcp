@@ -1,21 +1,30 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import api from "../../../services/api";
+import BreadCrumbs from "../../breadcrumb";
 import { FilledButton } from "../../buttons/FilledButton";
 import { LineButton } from "../../buttons/LineButton";
 import { AddressValue, Label } from "../Address/components/AddressItem/styles";
 import { Container } from "../Personal/styles";
+import GerenciaPlano from "./components/GerenciaPlano";
+import { MyPlanContainer,Bill } from "./components/GerenciaPlano/styles";
 
 import {
-  Bill,
   Content,
   EmptyState,
-  Modal,
-  ModalContent,
-  ModalFooter,
-  ModalTitle,
-  MyPlanContainer,
 } from "./styles";
+
+const breadcrumbs = [
+  {
+    path: "#",
+    label: "Minha Conta",
+  },
+  {
+    path: "#",
+    label: "Assinatura",
+    active: true,
+  },
+];
 
 const Plan: React.FC = () => {
   const [plan, setPlan] = useState(null);
@@ -31,14 +40,13 @@ const Plan: React.FC = () => {
   function handleCancelPlan() {
     api.put(`/subscription/disable/${plan.Subscription[0].id}`);
   }
+  console.log(plan);
 
   return (
     <Container>
       {step === "geral" && (
         <>
-          <div className='breadcrumbs'>
-            <a href=''>Minha Conta</a> <p>/</p> <a href=''>Assinatura</a>
-          </div>
+          <BreadCrumbs breadcrumbs={breadcrumbs} />
           <h1>Assinatura</h1>
           <Content>
             {!!Object.keys(plan ?? 0).length ? (
@@ -105,68 +113,7 @@ const Plan: React.FC = () => {
           </Content>
         </>
       )}
-      {step === "gerenciaPlano" && (
-        <div>
-          <div className='breadcrumbs'>
-            <a href='#'>Minha Conta</a> <p>/</p>{" "}
-            <a href='#' onClick={() => setStep("geral")}>
-              Assinatura
-            </a>
-            <p>/</p> <a href='#'>Gerenciar Plano</a>
-          </div>
-          <Content>
-            <MyPlanContainer>
-              {!!plan && (
-                <>
-                  <h2>Meu Plano</h2>
-                  <p>{plan?.title}</p>
-                  <ul>
-                    <li>{plan.description}</li>
-                  </ul>
-                  <FilledButton onClick={() => setStep("gerenciaPlano")}>
-                    Gerenciar Plano
-                  </FilledButton>
-                </>
-              )}
-            </MyPlanContainer>
-            <div className='secondContainer'>
-              <h2>Cobrança e Renovação</h2>
-              {!!plan ? (
-                <Bill>
-                  <div className='side-cancel'>
-                    <div className='item'>
-                      <Label>Forma de pagamento</Label>
-                      <AddressValue>Cartão de crédito</AddressValue>
-                    </div>
-                    <LineButton onClick={() => setModalIsOpen(true)}>
-                      Cancelar assinatura
-                    </LineButton>
-                  </div>
-                </Bill>
-              ) : (
-                "Sem planos assinados"
-              )}
-            </div>
-          </Content>
-          {modalIsOpen && (
-            <Modal>
-              <ModalContent>
-                <ModalTitle>
-                  Tem certeza que deseja cancelar sua assinatura?
-                </ModalTitle>
-                <ModalFooter>
-                  <LineButton onClick={() => setModalIsOpen(false)}>
-                    Cancelar
-                  </LineButton>
-                  <FilledButton onClick={() => handleCancelPlan()}>
-                    Confirmar
-                  </FilledButton>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          )}
-        </div>
-      )}
+      {step === "gerenciaPlano" && <GerenciaPlano />}
 
       {step === "historic" && (
         <>

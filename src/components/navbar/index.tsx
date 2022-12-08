@@ -5,11 +5,10 @@ import { useAuth } from "../../contexts/auth";
 import { FilledButton } from "../buttons/FilledButton";
 import { LineButton } from "../buttons/LineButton";
 
-import { Actions, Container, LeftContent } from "./styles";
+import { Actions, Container, LeftContent, LoggedArea, LogoutButton } from "./styles";
 
 const Navbar: React.FC = () => {
-  const { user } = useAuth();
-  console.log({ user });
+  const { user,logout } = useAuth();
 
   return (
     <Container>
@@ -35,30 +34,27 @@ const Navbar: React.FC = () => {
       </LeftContent>
       <Actions>
         {!!user ? (
-          <Link href='/my-data'>
-            <LineButton>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "16px" }}
-              >
-                <Image
-                  src='/avatar.svg'
-                  alt='avatar profile'
-                  width={32}
-                  height={32}
-                />
-                <p>{user.firstName}</p>
-                <p>{user.lastName}</p>
-              </div>
-            </LineButton>
-          </Link>
+          <LoggedArea>
+            <LogoutButton onClick={()=>logout()}>Sair</LogoutButton>
+            <Link href='/my-data'>
+              <Image
+                src='/avatar.svg'
+                alt='avatar profile'
+                width={32}
+                height={32}
+              />
+            </Link>
+          </LoggedArea>
         ) : (
           <Link href='/authentication'>
             <LineButton>Entrar</LineButton>
           </Link>
         )}
-        <Link href='/signature'>
-          <FilledButton>Assinar Agora</FilledButton>
-        </Link>
+        {!user && (
+          <Link href='/signature'>
+            <FilledButton>Assinar Agora</FilledButton>
+          </Link>
+        )}
       </Actions>
     </Container>
   );
