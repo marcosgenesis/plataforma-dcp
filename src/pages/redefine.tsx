@@ -19,9 +19,7 @@ const Redefine: NextPage = () => {
 
   return (
     <div>
-      {validateEmail ? (
-        <EmailPage/>
-      ) : validateToken ? (
+      {validateToken ? (
         validateRedefine ? (
           <Container>
             <Navbar />
