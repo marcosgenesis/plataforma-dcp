@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import api from "../services/api";
 import Router from "next/router";
@@ -31,6 +37,7 @@ interface AuthContextProps {
   };
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
+  loadUser: () => void;
 }
 
 interface LoginCredentials {
@@ -55,19 +62,20 @@ export function AuthContextProvider({ children }: TypeContextProvider) {
     return {} as AuthData;
   });
 
-  useEffect(() => {
-    async function loadUser() {
-      if (token) {
-        const userResponse = await api.get("/user", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(userResponse.data);
-        return;
-      }
-      setUser(null);
+  const loadUser = useCallback(async () => {
+    if (token) {
+      const userResponse = await api.get("/user", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(userResponse.data);
+      return;
     }
-    loadUser();
+    setUser(null);
   }, [token]);
+
+  useEffect(() => {
+    loadUser();
+  }, [token, loadUser]);
 
   const login = async ({ email, password }: LoginCredentials) => {
     const response = await api.post("/auth", {
@@ -90,13 +98,13 @@ export function AuthContextProvider({ children }: TypeContextProvider) {
   };
 
   const logout = (): void => {
-    destroyCookie(undefined,"@tramaAPP:token");
+    destroyCookie(undefined, "@tramaAPP:token");
     setData({} as AuthData);
-    Router.push('/authentication')
+    Router.push("/authentication");
   };
 
   return (
-    <AuthContext.Provider value={{ data, login, logout, user }}>
+    <AuthContext.Provider value={{ data, login, logout, user, loadUser }}>
       {children}
     </AuthContext.Provider>
   );

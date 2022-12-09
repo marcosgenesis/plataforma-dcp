@@ -7,12 +7,12 @@ import { LineButton } from "../../buttons/LineButton";
 import { AddressValue, Label } from "../Address/components/AddressItem/styles";
 import { Container } from "../Personal/styles";
 import GerenciaPlano from "./components/GerenciaPlano";
-import { MyPlanContainer,Bill } from "./components/GerenciaPlano/styles";
+import { MyPlanContainer, Bill } from "./components/GerenciaPlano/styles";
 
-import {
-  Content,
-  EmptyState,
-} from "./styles";
+import { Content, EmptyState, HistoricItem, Labels } from "./styles";
+import styled from "styled-components";
+
+
 
 const breadcrumbs = [
   {
@@ -36,12 +36,6 @@ const Plan: React.FC = () => {
     const response = api.get("/user/plan").then((r) => setPlan(r.data.data));
     api.get(`/subscription`).then((r) => setSubscription(r.data.data));
   }, []);
-
-  function handleCancelPlan() {
-    api.put(`/subscription/disable/${plan.Subscription[0].id}`);
-  }
-  console.log(plan);
-
   return (
     <Container>
       {step === "geral" && (
@@ -71,8 +65,8 @@ const Plan: React.FC = () => {
                           <AddressValue>Cartão de crédito</AddressValue>
                         </div>
                         <div className='item'>
-                          <Label>Valor</Label>
-                          <AddressValue>R$ 600,00/mês</AddressValue>
+                          <Label>Valor total</Label>
+                          <AddressValue>{`R$ ${Number(plan.price).toFixed(2)}`}</AddressValue>
                         </div>
                       </div>
                       <div className='side'>
@@ -113,7 +107,9 @@ const Plan: React.FC = () => {
           </Content>
         </>
       )}
-      {step === "gerenciaPlano" && <GerenciaPlano />}
+      {step === "gerenciaPlano" && (
+        <GerenciaPlano plan={plan} setStep={setStep} />
+      )}
 
       {step === "historic" && (
         <>
@@ -131,15 +127,21 @@ const Plan: React.FC = () => {
           </div>
           <div className='secondContainer'>
             <h2>Histórico de compras</h2>
+            <Labels>
+              <p>STATUS</p>
+              <p>VALOR</p>
+              <p>PLANO</p>
+            </Labels>
             {subscription?.map((i, index) => (
-              <div
+              <HistoricItem
                 key={index}
-                style={{ display: "flex", justifyContent: "space-between" }}
+                
               >
+                {console.log(i)}
                 <p>{i.isActive ? "ATIVO" : "DESABILITADO"}</p>
                 <p>{`R$ ${i.plan.price}`}</p>
                 <p>{i.plan.title}</p>
-              </div>
+              </HistoricItem>
             ))}
           </div>
         </>

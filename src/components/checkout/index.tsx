@@ -42,7 +42,7 @@ const Checkout: React.FC = () => {
     }
     
     handleGetFrete();
-  }, [data.cep, setDeliveryTime, setTaxDelivery, user]);
+  }, [data.cep, setTaxDelivery, user]);
 
   useEffect(() => {
     if (data.plan || frete.Valor) {

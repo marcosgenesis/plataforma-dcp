@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import MaskedInput from "react-text-mask";
-
 interface LabelProps {
   color: string;
 }
@@ -15,7 +13,7 @@ export const InputField = styled.input`
   }
 `;
 
-export const MaskedInputField = styled(MaskedInput)`
+export const MaskedInputField = styled.input`
   height: 48px;
   border: 1px solid rgba(20, 20, 231, 0.12);
   border-radius: 4px;

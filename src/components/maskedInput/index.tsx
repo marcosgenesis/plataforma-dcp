@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import { FieldError } from "react-hook-form";
-import MaskedInput from "react-text-mask";
+import InputMask from 'react-input-mask';
 
 import {
   Label,
@@ -22,6 +22,7 @@ const MaskInput: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   { onChange, onBlur, name, label, type, error, color, mask },
   ref
 ) => {
+  
   return (
     <InputContainer>
       <Label htmlFor={label} color={color}>
@@ -31,14 +32,19 @@ const MaskInput: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         <TextArea name={name} ref={ref} onChange={onChange} onBlur={onBlur} />
       )}
       {type !== "textarea" && (
-        <MaskedInputField
+        <InputMask
           mask={mask}
           name={name}
           type={type}
-          ref={ref}
           onChange={onChange}
           onBlur={onBlur}
-        />
+          ref={ref}
+        >
+          {(inputProps) => (
+            <MaskedInputField 
+             {...inputProps} disableUnderline />
+          )}
+        </InputMask>
       )}
       {!!error && <ErrorMessage>{error.message}</ErrorMessage>}
     </InputContainer>

@@ -30,6 +30,7 @@ interface PayFormProps {
 
 const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   const [options, setoptions] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(schema),
   });
@@ -61,6 +62,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
     vencimento,
     FormOfPayment,
   }: FieldValues) => {
+    setLoading(true)
     addItemPayStep({
       cvv,
       numeroCartao,
@@ -69,15 +71,16 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
       vencimento,
       taxDelivery,
       deliveryTime,
-      formOfPayment: payActive ? "Cartão de crédito" : "Boleto",
+      formOfPayment: payActive === 1 ? "creditCard" : "billet",
     });
-
+    
     if (!user) {
       createUse();
       return;
     }
-
+    
     save();
+    setLoading(false)
   };
   // nextStep()
 
@@ -99,7 +102,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
         numero: user.phone,
       });
     }
-  }, [addItemAddresStep, addItemPersonalStep, user]);
+  }, [user]);
 
   useEffect(() => {
     console.log(data);
@@ -122,9 +125,6 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
       <PayActiveContainer>
         <PayActive isCurrent={payActive === 1} onClick={() => setPayActive(1)}>
           Cartão de crédito
-        </PayActive>
-        <PayActive isCurrent={payActive === 2} onClick={() => setPayActive(2)}>
-          Boleto
         </PayActive>
       </PayActiveContainer>
       {payActive === 1 && (
@@ -193,7 +193,6 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
                 {format(addDays(new Date(), 7), "dd/MM/yyyy")}.
               </h2>
               <p>
-                {" "}
                 O prazo de entrega será contado após 1º dia útil da aprovação do
                 pedido. Este procedimento costuma ocorrer em até 24 horas, mas
                 se o pagamento for realizado por boleto bancário, o banco tem o
@@ -206,12 +205,10 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
 
       <Buttons>
         <LineButtonForm type='button' width='110px' onClick={backStep}>
-          {" "}
-          Voltar{" "}
+          Voltar
         </LineButtonForm>
-        <FilledButton width='210px' type='submit'>
-          {" "}
-          Confirmar pagamento{" "}
+        <FilledButton width='250px' type='submit' loading={loading}>
+          Confirmar pagamento
         </FilledButton>
       </Buttons>
     </ContainerForm>
