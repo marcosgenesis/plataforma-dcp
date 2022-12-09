@@ -4,8 +4,8 @@ import * as yup from "yup";
 const schema = yup.object().shape({
   numeroCartao: yup
     .string()
-    .min(16, "O cartão precisa conter 16 dígitos")
-    .max(16, "O cartão precisa conter 16 dígitos")
+    .min(19, "O cartão precisa conter 16 dígitos")
+    .max(19, "O cartão precisa conter 16 dígitos")
     .required("O numero do cartão é obrigatório"),
   cvv: yup
     .string()

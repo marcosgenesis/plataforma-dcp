@@ -29,26 +29,23 @@ const Checkout: React.FC = () => {
   useEffect(() => {
 
     async function handleGetFrete() {
-      if (data?.cep?.replace(/[^0-9]/g, "").length === 8 || user?.zipcode?.replace(/[^0-9]/g, "").length === 8) {
-        const response = await api.get(`/shipment/calculate/${user?.zipcode ?? data.cep}`);
-        console.log('response -->', response.data)
+      if (data?.cep?.replace(/[^0-9]/g, "").length === 8) {
+        const response = await api.get(`/shipment/calculate/${data.cep}`);
         setFrete(response.data[0]);
         const value = Number(response.data[0].Valor ? response.data[0].Valor.replace(",", ".") : 0) ?? 0;
         setTaxDelivery(value)
-        console.log('<--->', addDays(new Date(), response.data[0].PrazoEntrega).toString() )
-        // addDays(new Date(), response.data.deliveryTime).toString()
         setDeliveryTime(addDays(new Date(), response.data[0].PrazoEntrega))
       }
     }
     
     handleGetFrete();
-  }, [data.cep, setTaxDelivery, user]);
+  }, [data.cep, setTaxDelivery]);
 
   useEffect(() => {
     if (data.plan || frete.Valor) {
       const cust =
         data.planValue +
-          Number(frete.Valor ? frete.Valor.replace(",", ".") : 0) ?? 0;
+          Number(frete.Valor ? frete.Valor.replace(",", ".") : 0) ?? 0;          
       setTotal(cust - discount);
       setValueWithDiscount(cust - discount)
     }

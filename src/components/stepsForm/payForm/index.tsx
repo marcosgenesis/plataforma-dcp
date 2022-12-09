@@ -22,6 +22,7 @@ import { useSignature } from "../../../contexts/Signature";
 import { addDays, format } from "date-fns";
 import { useDeliveryStore } from "../../../stores/delivery";
 import { useAuth } from "../../../contexts/auth";
+import MaskedInput from "../../maskedInput";
 
 interface PayFormProps {
   nextStep: () => void;
@@ -51,6 +52,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
     addItemPersonalStep,
     addItemAddresStep,
     createUse,
+    addItemPlanStep,
   } = useSignature();
   const { user } = useAuth();
   const [payActive, setPayActive] = useState(1);
@@ -62,7 +64,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
     vencimento,
     FormOfPayment,
   }: FieldValues) => {
-    setLoading(true)
+    setLoading(true);
     addItemPayStep({
       cvv,
       numeroCartao,
@@ -73,14 +75,14 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
       deliveryTime,
       formOfPayment: payActive === 1 ? "creditCard" : "billet",
     });
-    
+
     if (!user) {
       createUse();
       return;
     }
-    
+
     save();
-    setLoading(false)
+    setLoading(false);
   };
   // nextStep()
 
@@ -114,7 +116,10 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
       setoptions(results);
     }
     setoptions([
-      { label: `1x de R$ ${data.planValue.toFixed(2)}`, value: data.planValue },
+      {
+        label: `1x de R$ ${data?.planValue?.toFixed(2)}`,
+        value: data.planValue,
+      },
     ]);
   }, [data]);
 
@@ -130,7 +135,9 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
       {payActive === 1 && (
         <>
           <InLine>
-            <Input
+            <MaskedInput
+              mask="9999 9999 9999 9999"
+              maskChar=""
               name='numeroCartao'
               label='Número do cartão'
               {...register("numeroCartao")}
@@ -140,7 +147,8 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
           </InLine>
 
           <InLine>
-            <Input
+            <MaskedInput
+              mask="999"
               name='cvv'
               label='CVV'
               {...register("cvv")}
@@ -148,7 +156,8 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
               color={"rgba(0, 0, 0, 0.66)"}
             />
 
-            <Input
+            <MaskedInput
+              mask="99/99"
               name='vencimento'
               label='Vencimento (MM/AA)'
               {...register("vencimento")}

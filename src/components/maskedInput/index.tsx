@@ -34,6 +34,7 @@ const MaskInput: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
       {type !== "textarea" && (
         <InputMask
           mask={mask}
+          maskChar={null}
           name={name}
           type={type}
           onChange={onChange}

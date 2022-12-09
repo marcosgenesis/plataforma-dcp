@@ -35,7 +35,7 @@ const Plan: React.FC = () => {
   useEffect(() => {
     const response = api.get("/user/plan").then((r) => setPlan(r.data.data));
     api.get(`/subscription`).then((r) => setSubscription(r.data.data));
-  }, []);
+  }, [step]);
   return (
     <Container>
       {step === "geral" && (

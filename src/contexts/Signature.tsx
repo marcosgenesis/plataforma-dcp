@@ -126,7 +126,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     cpf,
     telefone,
   }: PersonalStep): void => {
-    setData((old) => ({ ...old, email, name, cpf, telefone }));
+    setData((old) => ({ ...old, email, name, cpf:cpf.replace(/[^0-9]/g, ""), telefone }));
   };
 
   const addItemAddresStep = ({
@@ -188,9 +188,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
       country: "Brasil",
       number: data.numero,
       complement: data.complemento
-    }).then(()=>{
-      toast.success('Para acessar a plataforma utilize seu CPF como senha');
-      
+    }).then(()=>{      
       api.post("/auth", {email: data.email, password: data.cpf}).then((e) => {
 
         const dataInfo = {
@@ -224,7 +222,6 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
   }
 
   const save = () => {
-    console.log("todos -->", data)
     const dataInfo = {
       planId: data.planId,
       email: data.email,
@@ -243,8 +240,10 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
       couponId:	data.cupomId,
       deliveryTime:	data.deliveryTime,
       formOfPayment: data.formOfPayment,
+      number: data.numero
     }
     api.post('order/create', dataInfo).then(() =>{
+      setData({} as SignatureData)
       router.push('/request-success')
     }).catch()
   }

@@ -5,6 +5,7 @@ import Navbar from "../components/navbar";
 import { Content, Container, Header, DeliveryDate, Info, Body } from '../styles/requestSucess'
 import { useDeliveryStore } from "../stores/delivery";
 import { format } from "date-fns";
+import { Alert } from "@mui/material";
 
 const RequestSucess: React.FC = () => {
   const { deliveryTime } = useDeliveryStore(({ deliveryTime }) => ({ deliveryTime }));
@@ -37,6 +38,7 @@ const RequestSucess: React.FC = () => {
                 </li>
               </div>
             </Info>
+          <Alert severity="warning">Para acessar a plataforma, utilize o email cadastrado e a senha é o seu CPF!</Alert>
           </Body>
         </Content>
       </Container>
