@@ -23,12 +23,10 @@ const Address: React.FC = () => {
       <BreadCrumbs breadcrumbs={breadcrumbs}/>
       <Header>
         <h1>Endereços</h1>
-        <FilledButton>Novo Endereço</FilledButton>
+        <FilledButton disabled>Novo Endereço</FilledButton>
       </Header>
       <AdressesContainer>
         <AddressItem />
-        <AddressItem isActive={false}/>
-        <AddressItem isActive={false}/>
       </AdressesContainer>
     </Container>
   );

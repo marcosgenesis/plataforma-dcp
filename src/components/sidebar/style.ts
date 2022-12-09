@@ -46,9 +46,8 @@ export const ButtonMenu = styled.div`
   width: 100%;
   display: flex;
   width: 264px;
-  background: ${(props) => (props.active ? "E6EEFF" : "transparent")};
+  background: ${(props) => (props.active ? "#E6EEFF" : "transparent")};
   align-items: center;
-  /* justify-content: center; */
   padding: 8px 16px;
   gap: 8px;
 

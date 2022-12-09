@@ -7,13 +7,13 @@ import Plan from "../../components/profile/Plan";
 import Sidebar from "../../components/sidebar";
 import { useProfileMenuData } from "../../stores/profileMenuData";
 
-import { Content } from "../../styles/my-data";
+import { Content,Container } from "../../styles/my-data";
 import { withSSRAuth } from "../../utils/withSSRAuth";
 
 const MyData: React.FC = () => {
   const activeMenu = useProfileMenuData((state) => state.activeMenu);
   return (
-    <>
+    <Container>
       <Navbar />
       <Content>
         <Sidebar />
@@ -22,7 +22,7 @@ const MyData: React.FC = () => {
         {activeMenu === "plan" && <Plan />}
       </Content>
       <Footer expanded={false} />
-    </>
+    </Container>
   );
 };
 

@@ -35,3 +35,18 @@ export const EmptyState = styled.div`
     }
   }
 `;
+export const Labels = styled.div`
+  display: flex;
+  align-items:flex-end;
+
+  p{
+    width: 300px;
+  }
+`;
+export const HistoricItem = styled.div`
+  display: flex;
+  /* justify-content: space-between; */
+  p{
+    width: 300px;
+  }
+`;
