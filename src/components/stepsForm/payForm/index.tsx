@@ -22,7 +22,6 @@ import { useSignature } from "../../../contexts/Signature";
 import { addDays, format } from "date-fns";
 import { useDeliveryStore } from "../../../stores/delivery";
 import { useAuth } from "../../../contexts/auth";
-import api from "../../../services/api";
 
 
 interface PayFormProps {
@@ -35,7 +34,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(schema),
   });
-  const { taxDelivery, setTaxDelivery } = useDeliveryStore(({ taxDelivery, setTaxDelivery}) => ({ taxDelivery, setTaxDelivery }));
+  const { taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount} = useDeliveryStore(({ taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount}) => ({ taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount }));
 
   const { data, addItemPayStep, save, addItemPersonalStep, addItemAddresStep, createUse } = useSignature()
   const {user} = useAuth()
@@ -46,8 +45,9 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
     parcela,
     titular,
     vencimento,
+    FormOfPayment,
   }: FieldValues) => {
-    addItemPayStep({ cvv, numeroCartao, parcela, titular, vencimento, taxDelivery});
+    addItemPayStep({ cvv, numeroCartao, parcela, titular, vencimento, taxDelivery, deliveryTime, formOfPayment: payActive ? 'Cartão de crédito': 'Boleto' });
     
     if(!user){
       createUse()
@@ -67,11 +67,12 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
         city: user.zipcode,
         rua: user.street,
         state: user.state,
-        complemento: "",
-        numero: ""
+        complemento: user.complement,
+        numero: user.phone,
       })
     }
   }, [user])
+
   useEffect(() => {
     console.log(data);
     if (data.planValue > 100) {

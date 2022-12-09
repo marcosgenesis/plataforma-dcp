@@ -27,6 +27,7 @@ interface AuthContextProps {
     street: string;
     updatedAt: string;
     zipcode: string;
+    complement: string;
   };
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;

@@ -30,13 +30,14 @@ interface SignatureData {
   rua: string;
   state: string;
   taxDelivery?: number;
-  deliveryTime?: Date;
+  deliveryTime?: string;
 
   cvv?: string;
   numeroCartao?: string;
   parcela?: string;
   titular?: string;
   vencimento?: string;
+  formOfPayment?: string;
 }
 
 interface PlanStep {
@@ -70,7 +71,8 @@ interface PayStep {
   titular?: string;
   vencimento?: string;
   taxDelivery?: number;
-  deliveryTime?: Date;
+  deliveryTime?: string;
+  formOfPayment?: string;
 }
 
 interface SignatureContextProps {
@@ -94,6 +96,7 @@ interface SignatureContextProps {
     vencimento,
     taxDelivery,
     deliveryTime,
+    formOfPayment
   }: PayStep) => void;
   save: () => void;
   createUse: () => void;
@@ -153,7 +156,8 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     titular,
     vencimento,
     deliveryTime,
-    taxDelivery
+    taxDelivery,
+    formOfPayment,
   }: PayStep): void => {
     data.cvv = cvv;
     data.numeroCartao = numeroCartao;
@@ -161,6 +165,8 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     data.titular = titular;
     data.vencimento = vencimento;
     data.taxDelivery = taxDelivery ?? undefined;
+    data.deliveryTime = deliveryTime ?? undefined;
+    data.formOfPayment = formOfPayment ?? undefined
   };
 
   const createUse = () => {
@@ -202,7 +208,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
           taxDelivery:	data.taxDelivery,
           totalPrice:	data.planValue,
           couponId:	data.cupomId,
-          // deliveryTime:	string
+          deliveryTime:	data.deliveryTime
         }
         
         api.post('order/create', dataInfo, {headers: {
@@ -236,16 +242,14 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
       taxDelivery:	data.taxDelivery,
       totalPrice:	data.planValue,
       couponId:	data.cupomId,
-      // deliveryTime:	string
+      deliveryTime:	data.deliveryTime,
+      formOfPayment: data.formOfPayment,
     }
     api.post('order/create', dataInfo).then(() =>{
       router.push('/request-success')
     }).catch()
   }
 
-  useEffect(()=> {
-
-  }, [])
   return (
     <SignatureContext.Provider
       value={{

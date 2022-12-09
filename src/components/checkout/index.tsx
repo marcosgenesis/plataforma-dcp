@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { addDays } from 'date-fns'
 import Image from "next/image";
 import ChekcoutItemContent from "./checkoutItem/ItemContent";
 import CheckoutItemFooter from "./checkoutItem/ItemFooter";
@@ -24,9 +25,9 @@ const Checkout: React.FC = () => {
   const [frete, setFrete] = useState({});
   const [total, setTotal] = useState(0);
   const { discount } = useCupomStore(({ discount }) => ({ discount }));
-  const { taxDelivery, setTaxDelivery } = useDeliveryStore(({ taxDelivery, setTaxDelivery}) => ({ taxDelivery, setTaxDelivery }));
+  const { taxDelivery, setTaxDelivery, setValueWithDiscount, setDeliveryTime} = useDeliveryStore(({ taxDelivery, setTaxDelivery, setValueWithDiscount, setDeliveryTime}) => ({ taxDelivery, setTaxDelivery, setValueWithDiscount, setDeliveryTime}));
   useEffect(() => {
-    
+
     async function handleGetFrete() {
       if (data?.cep?.replace(/[^0-9]/g, "").length === 8 || user?.zipcode?.replace(/[^0-9]/g, "").length === 8) {
         const response = await api.get(`/shipment/calculate/${user?.zipcode ?? data.cep}`);
@@ -34,6 +35,9 @@ const Checkout: React.FC = () => {
         setFrete(response.data[0]);
         const value = Number(response.data[0].Valor ? response.data[0].Valor.replace(",", ".") : 0) ?? 0;
         setTaxDelivery(value)
+        console.log('<--->', addDays(new Date(), response.data[0].PrazoEntrega).toString() )
+        // addDays(new Date(), response.data.deliveryTime).toString()
+        setDeliveryTime(addDays(new Date(), response.data[0].PrazoEntrega).toString())
       }
     }
     
@@ -46,6 +50,7 @@ const Checkout: React.FC = () => {
         data.planValue +
           Number(frete.Valor ? frete.Valor.replace(",", ".") : 0) ?? 0;
       setTotal(cust - discount);
+      setValueWithDiscount(cust - discount)
     }
   }, [data.plan, data.planValue, discount, frete.Valor]);
 
