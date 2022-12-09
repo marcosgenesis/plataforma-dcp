@@ -18,8 +18,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
       <Content>
         <Profile>
           <Image
-            src='/avatar.svg'
-            alt='avatar profile'
+            src='/Avatar.svg'
+            alt='Avatar profile'
             width={96}
             height={96}
           />

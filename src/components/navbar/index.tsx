@@ -38,8 +38,8 @@ const Navbar: React.FC = () => {
             <LogoutButton onClick={()=>logout()}>Sair</LogoutButton>
             <Link href='/my-data'>
               <Image
-                src='/avatar.svg'
-                alt='avatar profile'
+                src='/Avatar.svg'
+                alt='Avatar profile'
                 width={32}
                 height={32}
               />
