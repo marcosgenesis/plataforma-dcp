@@ -92,6 +92,7 @@ export function AuthContextProvider({ children }: TypeContextProvider) {
     const userResponse = await api.get("/user", {
       headers: { Authorization: `Bearer ${token}` },
     });
+    api.defaults.headers.Authorization = `Bearer ${token}`;
     setUser(userResponse.data);
 
     setData({ token });
