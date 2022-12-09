@@ -3,6 +3,7 @@ import { useSignature } from "../../contexts/Signature";
 import { convertMoney } from "../../utils/convertMoney";
 import { Container, DivisionVertical } from "./styled";
 import { useCupomStore } from "../../stores/cupom";
+import { useDeliveryStore } from "../../stores/delivery";
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   idSelecPlan: string;
@@ -16,6 +17,8 @@ const Plan: ForwardRefRenderFunction<HTMLInputElement, IProps> = (
   ref
 ) => {
   const { data, addItemPlanStep } = useSignature();
+  const { taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount} = useDeliveryStore(({ taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount}) => ({ taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount }));
+
   const { cupomId } =
     useCupomStore(
       ({ cupomId }) => ({

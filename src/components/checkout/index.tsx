@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { addDays } from 'date-fns'
 import Image from "next/image";
 import ChekcoutItemContent from "./checkoutItem/ItemContent";
 import CheckoutItemFooter from "./checkoutItem/ItemFooter";
@@ -16,42 +17,39 @@ import api from "../../services/api";
 import { useCupomStore } from "../../stores/cupom";
 import { useDeliveryStore } from "../../stores/delivery";
 import { Description } from "./checkoutItem/ItemContent/style";
+import { useAuth } from "../../contexts/auth";
 
 const Checkout: React.FC = () => {
   const { data } = useSignature();
+  const {user} = useAuth()
   const [frete, setFrete] = useState({});
   const [total, setTotal] = useState(0);
   const { discount } = useCupomStore(({ discount }) => ({ discount }));
-  const { taxDelivery, setTaxDelivery } = useDeliveryStore(({ taxDelivery, setTaxDelivery}) => ({ taxDelivery, setTaxDelivery }));
+  const { taxDelivery, setTaxDelivery, setValueWithDiscount, setDeliveryTime} = useDeliveryStore(({ taxDelivery, setTaxDelivery, setValueWithDiscount, setDeliveryTime}) => ({ taxDelivery, setTaxDelivery, setValueWithDiscount, setDeliveryTime}));
   useEffect(() => {
-    // console.log('-->adad', data?.cep)
-    //depoos adicionar a remoção de caracteres
+
     async function handleGetFrete() {
-      if (data?.cep?.length === 8) {
-        const response = await api.get(`/shipment/calculate/${data.cep}`, {
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRkZWZlZjg0LThiYTItNDMzNi1iODVmLWUzMTg5NzE2OTNlMCIsImZpcnN0TmFtZSI6IlRpw6NvIiwibGFzdE5hbWUiOiJQZXNjYWRvciIsImVtYWlsIjoidGlhb0BnbWFpbC5jb20iLCJpYXQiOjE2Njk4MzIwNDEsImV4cCI6MTY2OTkxODQ0MX0.KD5H1G4DGL6vCH7Gi4IC73FF2_y5ftXsYfCymrKxxUc",
-          },
-        });
-        console.log('-->',response.data)
+      if (data?.cep?.replace(/[^0-9]/g, "").length === 8) {
+        const response = await api.get(`/shipment/calculate/${data.cep}`);
         setFrete(response.data[0]);
         const value = Number(response.data[0].Valor ? response.data[0].Valor.replace(",", ".") : 0) ?? 0;
         setTaxDelivery(value)
+        setDeliveryTime(addDays(new Date(), response.data[0].PrazoEntrega))
       }
     }
     
     handleGetFrete();
-  }, [data.cep, setTaxDelivery]);
+  }, [data.cep, setTaxDelivery,setDeliveryTime]);
 
   useEffect(() => {
     if (data.plan || frete.Valor) {
       const cust =
         data.planValue +
-          Number(frete.Valor ? frete.Valor.replace(",", ".") : 0) ?? 0;
+          Number(frete.Valor ? frete.Valor.replace(",", ".") : 0) ?? 0;          
       setTotal(cust - discount);
+      setValueWithDiscount(cust - discount)
     }
-  }, [data.plan, data.planValue, discount, frete.Valor]);
+  }, [data.plan, data.planValue, discount, frete.Valor, setValueWithDiscount]);
 
   return (
     <Container>
@@ -85,7 +83,7 @@ const Checkout: React.FC = () => {
             </>
           )}
         </ChekcoutItemContent>
-        <ChekcoutItemContent title='CUPOM' />
+        <ChekcoutItemContent title='CUPOM' value={discount}/>
       </CheckoutContent>
 
       <CheckoutFooter>

@@ -36,6 +36,7 @@ const GerenciaPlano: React.FC<GerenciaPlanoProps> = ({ plan, setStep }) => {
       await api.put(`/subscription/disable/${plan.Subscription[0].id}`);
       setLoading(false);
       setModalIsOpen(false);
+      setStep('geral')
     } catch (error) {
       console.log(error);
 

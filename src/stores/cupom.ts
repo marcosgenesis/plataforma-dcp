@@ -12,7 +12,7 @@ interface CupomStore {
 export const useCupomStore = create<CupomStore>((set, get) => ({
   discount: 0,
   isFreeShipping: false,
-  cupomId: "",
+  cupomId: undefined,
 
   changeIsFreeShipping: () => {
     set({ isFreeShipping: !get().isFreeShipping });

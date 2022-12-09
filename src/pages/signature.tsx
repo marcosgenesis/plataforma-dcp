@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { parseCookies } from "nookies";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import Checkout from "../components/checkout";
@@ -24,24 +25,38 @@ import {
 import { useRouter } from "next/router";
 import api from "../services/api";
 import { useCupomStore } from "../stores/cupom";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signature: NextPage = () => {
   const [step, setStep] = useState(1);
   const [cupom, setCupomValue] = useState("");
   const [validCupons, setCupomValids] = useState([]);
   const [isCupomError, setIsCupomError] = useState(false);
-  const { changeIsFreeShipping, discount, isFreeShipping, setDiscount, setCupomId } =
-    useCupomStore(
-      ({ changeIsFreeShipping, discount, isFreeShipping, setDiscount, setCupomId }) => ({
-        changeIsFreeShipping,
-        discount,
-        isFreeShipping,
-        setDiscount,
-        setCupomId,
-      })
-    );
+  const {
+    changeIsFreeShipping,
+    discount,
+    isFreeShipping,
+    setDiscount,
+    setCupomId,
+  } = useCupomStore(
+    ({
+      changeIsFreeShipping,
+      discount,
+      isFreeShipping,
+      setDiscount,
+      setCupomId,
+    }) => ({
+      changeIsFreeShipping,
+      discount,
+      isFreeShipping,
+      setDiscount,
+      setCupomId,
+    })
+  );
+
+  const cookies = parseCookies();
+  const token = cookies["@tramaAPP:token"];
 
   async function handleApplyCupom() {
     if (validCupons.some((e) => e === cupom)) {
@@ -57,8 +72,8 @@ const Signature: NextPage = () => {
         }
         setIsCupomError(false);
         setCupomValids([...validCupons, cupom]);
-        console.log('response.data.data.id', response.data.data.id)
-        setCupomId(response.data.data.id)
+        console.log("response.data.data.id", response.data.data.id);
+        setCupomId(response.data.data.id);
         setDiscount(response.data.data.discount);
         setCupomValue("");
       })
@@ -66,10 +81,19 @@ const Signature: NextPage = () => {
   }
 
   const nextStep = () => {
+    if (token) {
+      setStep(4);
+      return;
+    }
+
     setStep(step + 1);
   };
 
   const backStep = () => {
+    if (token) {
+      setStep(1);
+      return;
+    }
     setStep(step - 1);
   };
 

@@ -16,8 +16,8 @@ const schema = yup.object().shape({
   telefone: yup
     .string()
     .required("O telefone é obrigatório")
-    .min(11, "Telefone precisa conter no mínimo 11 dígitos")
-    .max(11, "Telefone precisa conter no mínimo 11 dígitos"),
+    .min(12, "Telefone precisa conter no mínimo 11 dígitos")
+    .max(12, "Telefone precisa conter no mínimo 11 dígitos"),
 });
 
 export default schema;

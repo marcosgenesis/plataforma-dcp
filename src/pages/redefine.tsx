@@ -9,11 +9,14 @@ import {
 import Input from "../components/input";
 import { Container } from "../styles/landingPage";
 import { FilledButton } from "../components/buttons/FilledButton";
+import EmailPage from "../components/redefine/Email";
 
-const validateToken = true;
-const validateRedefine = true;
+const validateToken = false;
+const validateEmail = true;
+const validateRedefine = false;
 
 const Redefine: NextPage = () => {
+
   return (
     <div>
       {validateToken ? (
@@ -22,7 +25,7 @@ const Redefine: NextPage = () => {
             <Navbar />
             <RedefineContainer>
               <div>
-                <div className="title-subtitle">
+                <div className='title-subtitle'>
                   <h1>Senha alterada com sucesso!</h1>
                   <p>
                     Você já pode usar sua nova senha para acessar sua conta!
@@ -30,7 +33,7 @@ const Redefine: NextPage = () => {
                 </div>
               </div>
               <ButtonContainer>
-                <FilledButton width="400px">Entrar</FilledButton>
+                <FilledButton width='400px'>Entrar</FilledButton>
               </ButtonContainer>
             </RedefineContainer>
             <Footer expanded />
@@ -40,17 +43,17 @@ const Redefine: NextPage = () => {
             <Navbar />
             <RedefineContainer>
               <div>
-                <div className="title-subtitle">
+                <div className='title-subtitle'>
                   <h1>Redefinir senha.</h1>
                   <p>Cadastre uma nova senha de acesso.</p>
                 </div>
               </div>
               <InputContainer>
-                <Input label="Nova senha" type="password" required></Input>
-                <Input label="Confirmar senha" type="password" required></Input>
+                <Input label='Nova senha' type='password' required></Input>
+                <Input label='Confirmar senha' type='password' required></Input>
               </InputContainer>
               <ButtonContainer>
-                <FilledButton width="400px" disabled>
+                <FilledButton width='400px' disabled>
                   Redefinir senha
                 </FilledButton>
               </ButtonContainer>
@@ -63,7 +66,7 @@ const Redefine: NextPage = () => {
           <Navbar />
           <RedefineContainer>
             <div>
-              <div className="title-subtitle">
+              <div className='title-subtitle'>
                 <h1>Token de verificação.</h1>
                 <p>
                   Insira o token de verificação que enviamos para o seu e-mail
@@ -72,10 +75,10 @@ const Redefine: NextPage = () => {
               </div>
             </div>
             <InputContainer>
-              <Input label="Token" required></Input>
+              <Input label='Token' required></Input>
             </InputContainer>
             <ButtonContainer>
-              <FilledButton width="400px" disabled>
+              <FilledButton width='400px' disabled>
                 Verificar
               </FilledButton>
             </ButtonContainer>

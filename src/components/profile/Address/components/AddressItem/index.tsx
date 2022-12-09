@@ -47,7 +47,7 @@ const AddressItem: React.FC<AddressProps> = ({ isActive = true }) => {
               <AddressValue>{`${user?.neighbourhood}, ${user?.city} - ${user?.state}`}</AddressValue>
               <div className='contentItem'>
                 <Label>complemento</Label>
-                <AddressValue>Sem complemento</AddressValue>
+                <AddressValue>{user?.complement}</AddressValue>
               </div>
               <div className='contentItem'>
                 <Label>Telefone</Label>

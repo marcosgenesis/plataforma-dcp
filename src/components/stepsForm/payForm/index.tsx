@@ -21,7 +21,8 @@ import Select from "../../select";
 import { useSignature } from "../../../contexts/Signature";
 import { addDays, format } from "date-fns";
 import { useDeliveryStore } from "../../../stores/delivery";
-
+import { useAuth } from "../../../contexts/auth";
+import MaskedInput from "../../maskedInput";
 
 interface PayFormProps {
   nextStep: () => void;
@@ -30,13 +31,30 @@ interface PayFormProps {
 
 const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   const [options, setoptions] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(schema),
   });
-  const { taxDelivery, setTaxDelivery } = useDeliveryStore(({ taxDelivery, setTaxDelivery}) => ({ taxDelivery, setTaxDelivery }));
+  const { taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount } =
+    useDeliveryStore(
+      ({ taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount }) => ({
+        taxDelivery,
+        setTaxDelivery,
+        deliveryTime,
+        valueWithDiscount,
+      })
+    );
 
-  const { data, addItemPayStep, save } = useSignature()
-
+  const {
+    data,
+    addItemPayStep,
+    save,
+    addItemPersonalStep,
+    addItemAddresStep,
+    createUse,
+    addItemPlanStep,
+  } = useSignature();
+  const { user } = useAuth();
   const [payActive, setPayActive] = useState(1);
   const handlePay = ({
     cvv,
@@ -44,23 +62,65 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
     parcela,
     titular,
     vencimento,
+    FormOfPayment,
   }: FieldValues) => {
-    addItemPayStep({ cvv, numeroCartao, parcela, titular, vencimento, taxDelivery});
+    setLoading(true);
+    addItemPayStep({
+      cvv,
+      numeroCartao,
+      parcela,
+      titular,
+      vencimento,
+      taxDelivery,
+      deliveryTime,
+      formOfPayment: payActive === 1 ? "creditCard" : "billet",
+    });
 
-    save()
-  }
-    // nextStep()
+    if (!user) {
+      createUse();
+      return;
+    }
+
+    save();
+    setLoading(false);
+  };
+  // nextStep()
+
+  useEffect(() => {
+    if (user) {
+      addItemPersonalStep({
+        cpf: user.cpf,
+        email: user.email,
+        name: `${user.firstName} ${user.lastName}`,
+        telefone: user.phone,
+      });
+      addItemAddresStep({
+        bairro: user.neighbourhood,
+        cep: user.zipcode,
+        city: user.zipcode,
+        rua: user.street,
+        state: user.state,
+        complemento: user.complement,
+        numero: user.phone,
+      });
+    }
+  }, [user,addItemAddresStep,addItemPersonalStep]);
 
   useEffect(() => {
     console.log(data);
     if (data.planValue > 100) {
       const results = [1, 2, 3, 4, 5, 6].map((v) => ({
-        label: `${v}x de R$ ${Number(data.planValue / v).toFixed(2)}`,
-        value: data.planValue / v,
+        label: `${v}x de R$ ${Number(data?.planValue / v).toFixed(2)}`,
+        value: data?.planValue / v,
       }));
       setoptions(results);
     }
-    setoptions([{label:`1x de R$ ${data.planValue.toFixed(2)}`,value:data.planValue}]);
+    setoptions([
+      {
+        label: `1x de R$ ${data?.planValue?.toFixed(2)}`,
+        value: data.planValue,
+      },
+    ]);
   }, [data]);
 
   return (
@@ -71,14 +131,13 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
         <PayActive isCurrent={payActive === 1} onClick={() => setPayActive(1)}>
           Cartão de crédito
         </PayActive>
-        <PayActive isCurrent={payActive === 2} onClick={() => setPayActive(2)}>
-          Boleto
-        </PayActive>
       </PayActiveContainer>
       {payActive === 1 && (
         <>
           <InLine>
-            <Input
+            <MaskedInput
+              mask="9999 9999 9999 9999"
+              maskChar=""
               name='numeroCartao'
               label='Número do cartão'
               {...register("numeroCartao")}
@@ -88,7 +147,8 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
           </InLine>
 
           <InLine>
-            <Input
+            <MaskedInput
+              mask="999"
               name='cvv'
               label='CVV'
               {...register("cvv")}
@@ -96,7 +156,8 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
               color={"rgba(0, 0, 0, 0.66)"}
             />
 
-            <Input
+            <MaskedInput
+              mask="99/99"
               name='vencimento'
               label='Vencimento (MM/AA)'
               {...register("vencimento")}
@@ -141,7 +202,6 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
                 {format(addDays(new Date(), 7), "dd/MM/yyyy")}.
               </h2>
               <p>
-                {" "}
                 O prazo de entrega será contado após 1º dia útil da aprovação do
                 pedido. Este procedimento costuma ocorrer em até 24 horas, mas
                 se o pagamento for realizado por boleto bancário, o banco tem o
@@ -154,12 +214,10 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
 
       <Buttons>
         <LineButtonForm type='button' width='110px' onClick={backStep}>
-          {" "}
-          Voltar{" "}
+          Voltar
         </LineButtonForm>
-        <FilledButton width='210px' type='submit'>
-          {" "}
-          Confirmar pagamento{" "}
+        <FilledButton width='250px' type='submit' loading={loading}>
+          Confirmar pagamento
         </FilledButton>
       </Buttons>
     </ContainerForm>

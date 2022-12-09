@@ -22,6 +22,7 @@ import api from "../services/api";
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from "../contexts/auth";
 import { withSSRGuest } from "../utils/withSSRGuest";
+import Link from "next/link";
 
 const Auth: NextPage = () => {
   const { login } = useAuth()
@@ -77,9 +78,9 @@ const Auth: NextPage = () => {
                 <input type="checkbox" />
                 <p>Lembre-se de mim</p>
               </div>
-              <div className="link">
-                <a href="#">Esqueci a senha</a>
-              </div>
+              {/* <div className="link">
+                <Link href="redefine">Esqueci a senha</Link>
+              </div> */}
             </div>
           </div>
         </InputContainer>

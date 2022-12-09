@@ -12,6 +12,7 @@ import { LineButtonForm } from "../../buttons/LineButtonForm"
 import {ContainerForm, Buttons, InLine} from './style'
 import Input from "../../input";
 import { useSignature } from "../../../contexts/Signature";
+import MaskedInput from "../../maskedInput";
 
 interface PersonalFormProps {
   nextStep: () => void;
@@ -58,7 +59,8 @@ const PersonalForm: React.FC<PersonalFormProps> = ({
         />
 
       <InLine>
-        <Input
+        <MaskedInput
+          mask="999.999.999-99"
           name='cpf'
           label='CPF'
           {...register("cpf")}
@@ -67,7 +69,8 @@ const PersonalForm: React.FC<PersonalFormProps> = ({
         />
 
         <div>
-          <Input
+          <MaskedInput
+            mask="99 999999999"
             name='telefone'
             label='Telefone?'
             {...register("telefone")}

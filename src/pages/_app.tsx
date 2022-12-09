@@ -8,14 +8,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SignatureContextProvider>
+    <AuthContextProvider>
+      <SignatureContextProvider>
         <ToastContainer />
-      <AuthContextProvider>
-
         <Component {...pageProps} />
-      </AuthContextProvider>
-    </SignatureContextProvider>
-  );
+      </SignatureContextProvider>
+    </AuthContextProvider>
+  )
 }
 
 export default MyApp;

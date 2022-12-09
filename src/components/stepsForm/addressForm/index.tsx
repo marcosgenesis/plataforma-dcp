@@ -55,7 +55,8 @@ const AddressForm: React.FC<AddressFormProps> = ({ backStep, nextStep }) => {
     complemento,
     numero,
   }: FieldValues) => {
-    addItemAddresStep({ bairro, cep, city, rua, state, complemento, numero });
+    const cepComplete = cep?.replace(/[^0-9]/g, "");
+    addItemAddresStep({ bairro, cep: cepComplete, city, rua, state, complemento, numero });
     nextStep();
   };
 
@@ -194,9 +195,8 @@ const AddressForm: React.FC<AddressFormProps> = ({ backStep, nextStep }) => {
           color={"rgba(0, 0, 0, 0.66)"}
         />
 
-        <Select
+        <Input
           name='city'
-          options={cities}
           label='Cidade'
           disabled={!watchState}
           error={formState.errors.city}

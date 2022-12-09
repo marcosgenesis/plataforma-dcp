@@ -11,8 +11,7 @@ import { MyPlanContainer, Bill } from "./components/GerenciaPlano/styles";
 
 import { Content, EmptyState, HistoricItem, Labels } from "./styles";
 import styled from "styled-components";
-
-
+import { parseCookies } from "nookies";
 
 const breadcrumbs = [
   {
@@ -31,11 +30,17 @@ const Plan: React.FC = () => {
   const [step, setStep] = useState("geral");
   const [subscription, setSubscription] = useState();
   const [modalIsOpen, setModalIsOpen] = useState(true);
+  const cookies = parseCookies();
+  const token = cookies["@tramaAPP:token"];
 
   useEffect(() => {
-    const response = api.get("/user/plan").then((r) => setPlan(r.data.data));
-    api.get(`/subscription`).then((r) => setSubscription(r.data.data));
-  }, []);
+    
+    if (token) {
+      console.log(token);
+      const response = api.get("/user/plan",{headers:{Authorization: `Bearer ${token}`}}).then((r) => setPlan(r.data.data));
+      api.get(`/subscription`).then((r) => setSubscription(r.data.data));
+    }
+  }, [step, token]);
   return (
     <Container>
       {step === "geral" && (
@@ -65,8 +70,10 @@ const Plan: React.FC = () => {
                           <AddressValue>Cartão de crédito</AddressValue>
                         </div>
                         <div className='item'>
-                          <Label>Valor</Label>
-                          <AddressValue>R$ 600,00/mês</AddressValue>
+                          <Label>Valor total</Label>
+                          <AddressValue>{`R$ ${Number(plan.price).toFixed(
+                            2
+                          )}`}</AddressValue>
                         </div>
                       </div>
                       <div className='side'>
@@ -133,10 +140,7 @@ const Plan: React.FC = () => {
               <p>PLANO</p>
             </Labels>
             {subscription?.map((i, index) => (
-              <HistoricItem
-                key={index}
-                
-              >
+              <HistoricItem key={index}>
                 {console.log(i)}
                 <p>{i.isActive ? "ATIVO" : "DESABILITADO"}</p>
                 <p>{`R$ ${i.plan.price}`}</p>
