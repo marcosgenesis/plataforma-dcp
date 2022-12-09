@@ -102,7 +102,6 @@ const EditAddress: React.FC<EditAdressProps> = ({setIsEditing}) => {
       setLoading(true);
       await api.patch("user", {
         zipcode: user.zipCode !== cep ? cep : undefined,
-        lastName: user.lastName !== city ? city : undefined,
         state: user.cpf !== state ? state : undefined,
         neighbourhood: user.neighbourhood !== bairro ? bairro : undefined,
         city: user.city !== city ? city : undefined,
