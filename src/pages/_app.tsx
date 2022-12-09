@@ -5,12 +5,11 @@ import {AuthContextProvider} from '../contexts/auth'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SignatureContextProvider>
-      <AuthContextProvider>
-
-      <Component {...pageProps} />
-      </AuthContextProvider>
-    </SignatureContextProvider>
+    <AuthContextProvider>
+      <SignatureContextProvider>
+        <Component {...pageProps} />
+      </SignatureContextProvider>
+    </AuthContextProvider>
   )
 }
 

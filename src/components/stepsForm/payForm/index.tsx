@@ -22,6 +22,7 @@ import { useSignature } from "../../../contexts/Signature";
 import { addDays, format } from "date-fns";
 import { useDeliveryStore } from "../../../stores/delivery";
 import { useAuth } from "../../../contexts/auth";
+import api from "../../../services/api";
 
 
 interface PayFormProps {
@@ -36,7 +37,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   });
   const { taxDelivery, setTaxDelivery } = useDeliveryStore(({ taxDelivery, setTaxDelivery}) => ({ taxDelivery, setTaxDelivery }));
 
-  const { data, addItemPayStep, save, addItemPersonalStep, addItemAddresStep } = useSignature()
+  const { data, addItemPayStep, save, addItemPersonalStep, addItemAddresStep, createUse } = useSignature()
   const {user} = useAuth()
   const [payActive, setPayActive] = useState(1);
   const handlePay = ({
@@ -47,6 +48,11 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
     vencimento,
   }: FieldValues) => {
     addItemPayStep({ cvv, numeroCartao, parcela, titular, vencimento, taxDelivery});
+    
+    if(!user){
+      createUse()
+      return
+    }
 
     save()
   }

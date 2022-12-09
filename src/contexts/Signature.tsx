@@ -8,6 +8,7 @@ import React, {
 import api from "../services/api";
 import { ToastContainer, toast } from 'react-toastify';
 import { useRouter } from 'next/router'
+import { useAuth } from "./auth";
 
 interface SignatureData {
   plan: string;
@@ -95,6 +96,7 @@ interface SignatureContextProps {
     deliveryTime,
   }: PayStep) => void;
   save: () => void;
+  createUse: () => void;
 }
 
 interface TypeContextProvider {
@@ -108,6 +110,7 @@ const SignatureContext = createContext<SignatureContextProps>(
 export function SignatureContextProvider({ children }: TypeContextProvider) {
   const [data, setData] = useState({} as SignatureData);
   const router = useRouter()
+  const { login } = useAuth()
 
   const addItemPlanStep = useCallback(({ plan, planValue, planId, cupomId }: PlanStep): void => {
     setData((old) => ({ ...old, plan, planValue, planId, cupomId: cupomId ?? undefined}));
@@ -160,6 +163,61 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     data.taxDelivery = taxDelivery ?? undefined;
   };
 
+  const createUse = () => {
+    api.post('user',{
+      firstName: data.name.split(' ')[0],
+      lastName: data.name.substring(data.name.split(' ')[0].length + 1, data.name.length),
+      email: data.email,
+      cpf: data.cpf,
+      phone: "+55" + data.telefone,
+      password: data.cpf,
+      birthdate: "1995-05-12",
+      gender: "male",
+      street: data.rua,
+      city: data.city,
+      neighbourhood: data.bairro,
+      zipcode: data.cep ,
+      state: data.state,
+      country: "Brasil",
+      number: data.numero,
+      complement: data.complemento
+    }).then(()=>{
+      toast.success('Para acessar a plataforma utilize seu CPF como senha');
+      
+      api.post("/auth", {email: data.email, password: data.cpf}).then((e) => {
+
+        const dataInfo = {
+          planId: data.planId,
+          email: data.email,
+          fullName: data.name,
+          cpf: data.cpf,
+          phone: data.numero,
+          street: data.rua,
+          neighbourhood: data.bairro,
+          city: data.city,
+          zipcode: data.cep,
+          state: data.state,
+          country: "BRAZIL",
+          complement: data.complemento,
+          taxDelivery:	data.taxDelivery,
+          totalPrice:	data.planValue,
+          couponId:	data.cupomId,
+          // deliveryTime:	string
+        }
+        
+        api.post('order/create', dataInfo, {headers: {
+          Authorization: `bearer ${e.data.token}` 
+        }}).then(() =>{
+          toast.success('Assinatura realizada com sucesso');
+          setTimeout(()=>{
+            router.push('/my-data')
+          }, 5000)
+        }).catch()
+      })
+        
+    }).catch()
+  }
+
   const save = () => {
     console.log("todos -->", data)
     const dataInfo = {
@@ -183,11 +241,14 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     api.post('order/create', dataInfo).then(() =>{
       toast.success('Assinatura realizada com sucesso');
       setTimeout(()=>{
-        router.push('/')
-      }, 3500)
+        router.push('/my-data')
+      }, 5000)
     }).catch()
   }
 
+  useEffect(()=> {
+
+  }, [])
   return (
     <SignatureContext.Provider
       value={{
@@ -197,6 +258,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
         addItemPersonalStep,
         addItemPlanStep,
         save,
+        createUse,
       }}
     >
       {children}
