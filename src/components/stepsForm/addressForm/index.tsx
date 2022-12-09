@@ -55,7 +55,8 @@ const AddressForm: React.FC<AddressFormProps> = ({ backStep, nextStep }) => {
     complemento,
     numero,
   }: FieldValues) => {
-    addItemAddresStep({ bairro, cep, city, rua, state, complemento, numero });
+    const cepComplete = cep?.replace(/[^0-9]/g, "");
+    addItemAddresStep({ bairro, cep: cepComplete, city, rua, state, complemento, numero });
     nextStep();
   };
 
