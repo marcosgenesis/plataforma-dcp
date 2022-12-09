@@ -6,8 +6,8 @@ import React, {
   useState,
 } from "react";
 import api from "../services/api";
-import { ToastContainer, toast } from 'react-toastify';
-import { useRouter } from 'next/router'
+import { ToastContainer, toast } from "react-toastify";
+import { Router, useRouter } from "next/router";
 import { useAuth } from "./auth";
 import { format } from "date-fns";
 
@@ -15,13 +15,12 @@ interface SignatureData {
   plan: string;
   planValue: number;
   planId: string;
-  cupomId?: string,
+  cupomId?: string;
 
   email: string;
   name: string;
   cpf: string;
   telefone: string;
-
 
   bairro: string;
   cep: string;
@@ -45,7 +44,7 @@ interface PlanStep {
   plan: string;
   planValue?: number;
   planId: string;
-  cupomId?: string,
+  cupomId?: string;
 }
 
 interface PersonalStep {
@@ -97,7 +96,7 @@ interface SignatureContextProps {
     vencimento,
     taxDelivery,
     deliveryTime,
-    formOfPayment
+    formOfPayment,
   }: PayStep) => void;
   save: () => void;
   createUse: () => void;
@@ -113,12 +112,21 @@ const SignatureContext = createContext<SignatureContextProps>(
 
 export function SignatureContextProvider({ children }: TypeContextProvider) {
   const [data, setData] = useState({} as SignatureData);
-  const router = useRouter()
-  const { login } = useAuth()
+  const router = useRouter();
+  const { login } = useAuth();
 
-  const addItemPlanStep = useCallback(({ plan, planValue, planId, cupomId }: PlanStep): void => {
-    setData((old) => ({ ...old, plan, planValue, planId, cupomId: cupomId ?? undefined}));
-  }, []);
+  const addItemPlanStep = useCallback(
+    ({ plan, planValue, planId, cupomId }: PlanStep): void => {
+      setData((old) => ({
+        ...old,
+        plan,
+        planValue,
+        planId,
+        cupomId: cupomId ?? undefined,
+      }));
+    },
+    []
+  );
 
   const addItemPersonalStep = ({
     email,
@@ -126,7 +134,13 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     cpf,
     telefone,
   }: PersonalStep): void => {
-    setData((old) => ({ ...old, email, name, cpf:cpf.replace(/[^0-9]/g, ""), telefone }));
+    setData((old) => ({
+      ...old,
+      email,
+      name,
+      cpf: cpf.replace(/[^0-9]/g, ""),
+      telefone,
+    }));
   };
 
   const addItemAddresStep = ({
@@ -136,7 +150,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     complemento,
     numero,
     rua,
-    state
+    state,
   }: AddresStep): void => {
     setData((old) => ({
       ...old,
@@ -167,59 +181,76 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     data.vencimento = vencimento;
     data.taxDelivery = taxDelivery ?? undefined;
     data.deliveryTime = deliveryTime ?? undefined;
-    data.formOfPayment = formOfPayment ?? undefined
+    data.formOfPayment = formOfPayment ?? undefined;
   };
 
   const createUse = () => {
-    api.post('user',{
-      firstName: data.name.split(' ')[0],
-      lastName: data.name.substring(data.name.split(' ')[0].length + 1, data.name.length),
-      email: data.email,
-      cpf: data.cpf,
-      phone: "+55" + data.telefone,
-      password: data.cpf,
-      birthdate: "1995-05-12",
-      gender: "male",
-      street: data.rua,
-      city: data.city,
-      neighbourhood: data.bairro,
-      zipcode: data.cep,
-      state: data.state,
-      country: "Brasil",
-      number: data.numero,
-      complement: data.complemento
-    }).then(()=>{      
-      api.post("/auth", {email: data.email, password: data.cpf}).then((e) => {
-
-        const dataInfo = {
-          planId: data.planId,
-          email: data.email,
-          fullName: data.name,
-          cpf: data.cpf,
-          phone: data.numero,
-          street: data.rua,
-          neighbourhood: data.bairro,
-          city: data.city,
-          zipcode: data.cep,
-          state: data.state,
-          country: "BRAZIL",
-          complement: data.complemento,
-          taxDelivery:	data.taxDelivery,
-          couponId:	data.cupomId,
-          deliveryTime:	data.deliveryTime
-        }
-        
-        api.post('order/create', dataInfo, {headers: {
-          Authorization: `bearer ${e.data.token}` 
-        }}).then(() =>{
-          setTimeout(()=>{
-            router.push('/request-success')
-          }, 1000)
-        }).catch()
+    api
+      .post("user", {
+        firstName: data.name.split(" ")[0],
+        lastName: data.name.substring(
+          data.name.split(" ")[0].length + 1,
+          data.name.length
+        ),
+        email: data.email,
+        cpf: data.cpf,
+        phone: "+55" + data.telefone,
+        password: data.cpf,
+        birthdate: "1995-05-12",
+        gender: "male",
+        street: data.rua,
+        city: data.city,
+        neighbourhood: data.bairro,
+        zipcode: data.cep,
+        state: data.state,
+        country: "Brasil",
+        number: data.numero,
+        complement: data.complemento,
       })
-        
-    }).catch()
-  }
+      .then(() => {
+        api
+          .post("/auth", { email: data.email, password: data.cpf })
+          .then((e) => {
+            const dataInfo = {
+              planId: data.planId,
+              email: data.email,
+              fullName: data.name,
+              cpf: data.cpf,
+              phone: data.numero,
+              street: data.rua,
+              neighbourhood: data.bairro,
+              city: data.city,
+              zipcode: data.cep,
+              state: data.state,
+              country: "BRAZIL",
+              complement: data.complemento,
+              taxDelivery: data.taxDelivery,
+              couponId: data.cupomId,
+              deliveryTime: data.deliveryTime,
+            };
+
+            api
+              .post("order/create", dataInfo, {
+                headers: {
+                  Authorization: `bearer ${e.data.token}`,
+                },
+              })
+              .then(() => {
+                  router.push("/request-success");
+              })
+              .catch();
+          });
+      })
+      .catch((e) => {
+        if (e.response.data.statusCode === 409) {
+          toast(
+            "Usuário com essas informações já existe,realize o login para continuar",
+            { type: "error", position: "top-center" }
+          );
+          router.push("/authentication");
+        }
+      });
+  };
 
   const save = () => {
     const dataInfo = {
@@ -235,18 +266,21 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
       state: data.state,
       country: "BRAZIL",
       complement: data.complemento,
-      taxDelivery:	data.taxDelivery,
-      totalPrice:	data.planValue,
-      couponId:	data.cupomId,
-      deliveryTime:	data.deliveryTime,
+      taxDelivery: data.taxDelivery,
+      totalPrice: data.planValue,
+      couponId: data.cupomId,
+      deliveryTime: data.deliveryTime,
       formOfPayment: data.formOfPayment,
-      number: data.numero
-    }
-    api.post('order/create', dataInfo).then(() =>{
-      setData({} as SignatureData)
-      router.push('/request-success')
-    }).catch()
-  }
+      number: data.numero,
+    };
+    api
+      .post("order/create", dataInfo)
+      .then(() => {
+        setData({} as SignatureData);
+        router.push("/request-success");
+      })
+      .catch();
+  };
 
   return (
     <SignatureContext.Provider

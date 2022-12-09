@@ -104,7 +104,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
         numero: user.phone,
       });
     }
-  }, [user]);
+  }, [user,addItemAddresStep,addItemPersonalStep]);
 
   useEffect(() => {
     console.log(data);
