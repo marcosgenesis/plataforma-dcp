@@ -23,6 +23,7 @@ import { addDays, format } from "date-fns";
 import { useDeliveryStore } from "../../../stores/delivery";
 import { useAuth } from "../../../contexts/auth";
 import MaskedInput from "../../maskedInput";
+import { parseCookies } from "nookies";
 
 interface PayFormProps {
   nextStep: () => void;
@@ -32,6 +33,9 @@ interface PayFormProps {
 const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   const [options, setoptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const cookies = parseCookies()
+  const token = cookies['@tramaAPP:token']
+  
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(schema),
   });
@@ -87,7 +91,7 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   // nextStep()
 
   useEffect(() => {
-    if (user) {
+    if (user) {      
       addItemPersonalStep({
         cpf: user.cpf,
         email: user.email,

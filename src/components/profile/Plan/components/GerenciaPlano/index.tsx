@@ -23,20 +23,23 @@ interface GerenciaPlanoProps {
     description: string;
     Subscription: { id: string }[];
   };
+  subscription: {
+    id: string;
+  };
   setStep: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const GerenciaPlano: React.FC<GerenciaPlanoProps> = ({ plan, setStep }) => {
+const GerenciaPlano: React.FC<GerenciaPlanoProps> = ({ plan, setStep,subscription }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleCancelPlan() {
     try {
       setLoading(true);
-      await api.put(`/subscription/disable/${plan.Subscription[0].id}`);
+      await api.put(`/subscription/disable/${subscription.id}`);
       setLoading(false);
       setModalIsOpen(false);
-      setStep('geral')
+      setStep("geral");
     } catch (error) {
       console.log(error);
 

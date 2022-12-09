@@ -115,7 +115,7 @@ const Plan: React.FC = () => {
         </>
       )}
       {step === "gerenciaPlano" && (
-        <GerenciaPlano plan={plan} setStep={setStep} />
+        <GerenciaPlano plan={plan} subcription={subscription} setStep={setStep} />
       )}
 
       {step === "historic" && (
@@ -139,7 +139,7 @@ const Plan: React.FC = () => {
               <p>VALOR</p>
               <p>PLANO</p>
             </Labels>
-            {subscription?.map((i, index) => (
+            {plan?.Subscription?.map((i, index) => (
               <HistoricItem key={index}>
                 {console.log(i)}
                 <p>{i.isActive ? "ATIVO" : "DESABILITADO"}</p>

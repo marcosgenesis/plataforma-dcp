@@ -128,41 +128,42 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
     []
   );
 
-  const addItemPersonalStep = ({
-    email,
-    name,
-    cpf,
-    telefone,
-  }: PersonalStep): void => {
-    setData((old) => ({
-      ...old,
-      email,
-      name,
-      cpf: cpf.replace(/[^0-9]/g, ""),
-      telefone,
-    }));
-  };
+  const addItemPersonalStep = useCallback(
+    ({ email, name, cpf, telefone }: PersonalStep): void => {
+      setData((old) => ({
+        ...old,
+        email,
+        name,
+        cpf: cpf.replace(/[^0-9]/g, ""),
+        telefone,
+      }));
+    },
+    []
+  );
 
-  const addItemAddresStep = ({
-    bairro,
-    cep,
-    city,
-    complemento,
-    numero,
-    rua,
-    state,
-  }: AddresStep): void => {
-    setData((old) => ({
-      ...old,
+  const addItemAddresStep = useCallback(
+    ({
       bairro,
       cep,
       city,
+      complemento,
+      numero,
       rua,
       state,
-      complemento: complemento ?? undefined,
-      numero: numero ?? undefined,
-    }));
-  };
+    }: AddresStep): void => {
+      setData((old) => ({
+        ...old,
+        bairro,
+        cep,
+        city,
+        rua,
+        state,
+        complemento: complemento ?? undefined,
+        numero: numero ?? undefined,
+      }));
+    },
+    []
+  );
 
   const addItemPayStep = ({
     cvv,
@@ -236,7 +237,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
                 },
               })
               .then(() => {
-                  router.push("/request-success");
+                router.push("/request-success");
               })
               .catch();
           });
