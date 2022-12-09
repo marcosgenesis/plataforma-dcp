@@ -194,9 +194,8 @@ const AddressForm: React.FC<AddressFormProps> = ({ backStep, nextStep }) => {
           color={"rgba(0, 0, 0, 0.66)"}
         />
 
-        <Select
+        <Input
           name='city'
-          options={cities}
           label='Cidade'
           disabled={!watchState}
           error={formState.errors.city}

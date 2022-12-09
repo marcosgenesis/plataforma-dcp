@@ -23,7 +23,6 @@ import { addDays, format } from "date-fns";
 import { useDeliveryStore } from "../../../stores/delivery";
 import { useAuth } from "../../../contexts/auth";
 
-
 interface PayFormProps {
   nextStep: () => void;
   backStep: () => void;
@@ -34,10 +33,25 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(schema),
   });
-  const { taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount} = useDeliveryStore(({ taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount}) => ({ taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount }));
+  const { taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount } =
+    useDeliveryStore(
+      ({ taxDelivery, setTaxDelivery, deliveryTime, valueWithDiscount }) => ({
+        taxDelivery,
+        setTaxDelivery,
+        deliveryTime,
+        valueWithDiscount,
+      })
+    );
 
-  const { data, addItemPayStep, save, addItemPersonalStep, addItemAddresStep, createUse } = useSignature()
-  const {user} = useAuth()
+  const {
+    data,
+    addItemPayStep,
+    save,
+    addItemPersonalStep,
+    addItemAddresStep,
+    createUse,
+  } = useSignature();
+  const { user } = useAuth();
   const [payActive, setPayActive] = useState(1);
   const handlePay = ({
     cvv,
@@ -47,20 +61,34 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
     vencimento,
     FormOfPayment,
   }: FieldValues) => {
-    addItemPayStep({ cvv, numeroCartao, parcela, titular, vencimento, taxDelivery, deliveryTime, formOfPayment: payActive ? 'Cartão de crédito': 'Boleto' });
-    
-    if(!user){
-      createUse()
-      return
+    addItemPayStep({
+      cvv,
+      numeroCartao,
+      parcela,
+      titular,
+      vencimento,
+      taxDelivery,
+      deliveryTime,
+      formOfPayment: payActive ? "Cartão de crédito" : "Boleto",
+    });
+
+    if (!user) {
+      createUse();
+      return;
     }
 
-    save()
-  }
-    // nextStep()
+    save();
+  };
+  // nextStep()
 
-  useEffect(()=>{
-    if(user){
-      addItemPersonalStep({cpf: user.cpf, email: user.email, name: `${user.firstName} ${user.lastName}`, telefone: user.phone })
+  useEffect(() => {
+    if (user) {
+      addItemPersonalStep({
+        cpf: user.cpf,
+        email: user.email,
+        name: `${user.firstName} ${user.lastName}`,
+        telefone: user.phone,
+      });
       addItemAddresStep({
         bairro: user.neighbourhood,
         cep: user.zipcode,
@@ -69,9 +97,9 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
         state: user.state,
         complemento: user.complement,
         numero: user.phone,
-      })
+      });
     }
-  }, [user])
+  }, [addItemAddresStep, addItemPersonalStep, user]);
 
   useEffect(() => {
     console.log(data);
@@ -82,7 +110,9 @@ const PayForm: React.FC<PayFormProps> = ({ backStep, nextStep }) => {
       }));
       setoptions(results);
     }
-    setoptions([{label:`1x de R$ ${data.planValue.toFixed(2)}`,value:data.planValue}]);
+    setoptions([
+      { label: `1x de R$ ${data.planValue.toFixed(2)}`, value: data.planValue },
+    ]);
   }, [data]);
 
   return (

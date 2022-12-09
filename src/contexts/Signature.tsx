@@ -9,6 +9,7 @@ import api from "../services/api";
 import { ToastContainer, toast } from 'react-toastify';
 import { useRouter } from 'next/router'
 import { useAuth } from "./auth";
+import { format } from "date-fns";
 
 interface SignatureData {
   plan: string;
@@ -206,7 +207,6 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
           country: "BRAZIL",
           complement: data.complemento,
           taxDelivery:	data.taxDelivery,
-          totalPrice:	data.planValue,
           couponId:	data.cupomId,
           deliveryTime:	data.deliveryTime
         }
@@ -214,10 +214,9 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
         api.post('order/create', dataInfo, {headers: {
           Authorization: `bearer ${e.data.token}` 
         }}).then(() =>{
-          
           setTimeout(()=>{
             router.push('/request-success')
-          }, 4000)
+          }, 1000)
         }).catch()
       })
         

@@ -37,12 +37,12 @@ const Checkout: React.FC = () => {
         setTaxDelivery(value)
         console.log('<--->', addDays(new Date(), response.data[0].PrazoEntrega).toString() )
         // addDays(new Date(), response.data.deliveryTime).toString()
-        setDeliveryTime(addDays(new Date(), response.data[0].PrazoEntrega).toString())
+        setDeliveryTime(addDays(new Date(), response.data[0].PrazoEntrega))
       }
     }
     
     handleGetFrete();
-  }, [data.cep, setTaxDelivery, user]);
+  }, [data.cep, setDeliveryTime, setTaxDelivery, user]);
 
   useEffect(() => {
     if (data.plan || frete.Valor) {
@@ -52,7 +52,7 @@ const Checkout: React.FC = () => {
       setTotal(cust - discount);
       setValueWithDiscount(cust - discount)
     }
-  }, [data.plan, data.planValue, discount, frete.Valor]);
+  }, [data.plan, data.planValue, discount, frete.Valor, setValueWithDiscount]);
 
   return (
     <Container>

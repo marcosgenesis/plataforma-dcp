@@ -4,6 +4,7 @@ import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import { Content, Container, Header, DeliveryDate, Info, Body } from '../styles/requestSucess'
 import { useDeliveryStore } from "../stores/delivery";
+import { format } from "date-fns";
 
 const RequestSucess: React.FC = () => {
   const { deliveryTime } = useDeliveryStore(({ deliveryTime }) => ({ deliveryTime }));
@@ -19,8 +20,7 @@ const RequestSucess: React.FC = () => {
           <Body>
             <DeliveryDate>
               <p>PREVISÃO DE ENTREGA</p>
-              <span>DD/MM/AAAA</span>
-              {/* <span> {deliveryTime?.toUpperCase()} </span> */}
+              <span>{format(new Date(deliveryTime), 'dd/MM/yyyy')}</span>
             </DeliveryDate>
             <Info>
               <div>
