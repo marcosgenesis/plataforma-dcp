@@ -10,12 +10,13 @@ import {
 
 interface InputProps extends HtmlElementProps<HTMLInputElement> {
   label: string;
+  height?: string;
   error?: FieldError;
   color: string;
 }
 
 const Input: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { onChange, onBlur, name, label, type, error, color },
+  { onChange, onBlur, name, label, type, error, color, height },
   ref
 ) => {
   return (
@@ -29,6 +30,7 @@ const Input: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
           name={name}
           type={type}
           ref={ref}
+          height={height}
           onChange={onChange}
           onBlur={onBlur}
         />

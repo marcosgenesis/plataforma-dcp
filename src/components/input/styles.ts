@@ -5,12 +5,12 @@ interface LabelProps {
 }
 
 export const InputField = styled.input`
-  height: 48px;
+  height: ${(props) => (props.height ? props.height : "48px")};
   border: 1px solid rgba(20, 20, 231, 0.12);
   border-radius: 4px;
   padding: 0px 16px;
   &:focus {
-    background: #E6EEFF;
+    background: #e6eeff;
   }
 `;
 export const TextArea = styled.textarea`
