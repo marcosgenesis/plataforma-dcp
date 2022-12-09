@@ -26,10 +26,9 @@ const Checkout: React.FC = () => {
   const { discount } = useCupomStore(({ discount }) => ({ discount }));
   const { taxDelivery, setTaxDelivery } = useDeliveryStore(({ taxDelivery, setTaxDelivery}) => ({ taxDelivery, setTaxDelivery }));
   useEffect(() => {
-    // console.log('-->adad', data?.cep)
-    //depoos adicionar a remoção de caracteres
+    
     async function handleGetFrete() {
-      if (data?.cep?.length || user?.zipcode?.length === 8) {
+      if (data?.cep?.replace(/[^0-9]/g, "").length === 8 || user?.zipcode?.replace(/[^0-9]/g, "").length === 8) {
         const response = await api.get(`/shipment/calculate/${user?.zipcode ?? data.cep}`);
         console.log('response -->', response.data)
         setFrete(response.data[0]);
