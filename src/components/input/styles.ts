@@ -10,8 +10,11 @@ export const InputField = styled.input`
   border-radius: 4px;
   padding: 0px 16px;
   &:focus {
-    background: #E6EEFF;
+    background: #e6eeff;
   }
+
+
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "auto")};
 `;
 export const TextArea = styled.textarea`
   min-height: 72px;
@@ -31,6 +34,7 @@ export const InputContainer = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "auto")};
 `;
 export const ErrorMessage = styled.p`
   color: red;

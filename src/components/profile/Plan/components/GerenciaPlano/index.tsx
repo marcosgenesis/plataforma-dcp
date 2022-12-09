@@ -1,11 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import { FilledButton } from "../../../../buttons/FilledButton";
 import { Content } from "../../styles";
-import { Bill, Modal, ModalContent, ModalFooter, ModalTitle, MyPlanContainer } from "./styles";
-import { AddressValue, Label } from "../../../Address/components/AddressItem/styles";
+import {
+  Bill,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalTitle,
+  MyPlanContainer,
+} from "./styles";
+import {
+  AddressValue,
+  Label,
+} from "../../../Address/components/AddressItem/styles";
 import { LineButton } from "../../../../buttons/LineButton";
+import { toast } from "react-toastify";
+import api from "../../../../../services/api";
 
-const GerenciaPlano: React.FC = () => {
+interface GerenciaPlanoProps {
+  plan: {
+    title: string;
+    description: string;
+    Subscription: { id: string }[];
+  };
+  setStep: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const GerenciaPlano: React.FC<GerenciaPlanoProps> = ({ plan, setStep }) => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function handleCancelPlan() {
+    try {
+      setLoading(true);
+      await api.put(`/subscription/disable/${plan.Subscription[0].id}`);
+      setLoading(false);
+      setModalIsOpen(false);
+    } catch (error) {
+      console.log(error);
+
+      toast(
+        "Não conseguimos desabilitar o seu plano atual, tente novamente mais tarde",
+        { type: "error", position: "top-center" }
+      );
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       <div>
@@ -25,9 +66,6 @@ const GerenciaPlano: React.FC = () => {
                 <ul>
                   <li>{plan.description}</li>
                 </ul>
-                <FilledButton onClick={() => setStep("gerenciaPlano")}>
-                  Gerenciar Plano
-                </FilledButton>
               </>
             )}
           </MyPlanContainer>
@@ -60,7 +98,10 @@ const GerenciaPlano: React.FC = () => {
                 <LineButton onClick={() => setModalIsOpen(false)}>
                   Cancelar
                 </LineButton>
-                <FilledButton onClick={() => handleCancelPlan()}>
+                <FilledButton
+                  onClick={() => handleCancelPlan()}
+                  loading={loading}
+                >
                   Confirmar
                 </FilledButton>
               </ModalFooter>

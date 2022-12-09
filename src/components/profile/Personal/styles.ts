@@ -22,7 +22,7 @@ export const InfoContainer = styled.div`
   display: flex;
   gap: 24px;
 `;
-export const PersonalDataContainer = styled.div`
+export const PersonalDataContainer = styled.form`
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -38,10 +38,4 @@ export const ActionButtonContainer = styled.div`
   margin-top: 24px;
   display: flex;
   justify-content:flex-end ;
-`;
-export const SafetyContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap:24px ;
 `;

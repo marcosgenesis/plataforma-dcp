@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const FilledButtonContainer = styled.button`
   width: ${(props) => props.width ?? "auto"};
+  height: 44px;
   background: #0055ff;
   border: none;
   cursor: pointer;
