@@ -21,7 +21,7 @@ const RequestSucess: React.FC = () => {
           <Body>
             <DeliveryDate>
               <p>PREVISÃO DE ENTREGA</p>
-              <span>{format(new Date(deliveryTime), 'dd/MM/yyyy')}</span>
+              <span>{deliveryTime ? format(new Date(deliveryTime) , 'dd/MM/yyyy') : 'Sem data'}</span>
             </DeliveryDate>
             <Info>
               <div>
