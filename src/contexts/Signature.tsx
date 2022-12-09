@@ -208,10 +208,10 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
         api.post('order/create', dataInfo, {headers: {
           Authorization: `bearer ${e.data.token}` 
         }}).then(() =>{
-          toast.success('Assinatura realizada com sucesso');
+          
           setTimeout(()=>{
-            router.push('/my-data')
-          }, 5000)
+            router.push('/request-success')
+          }, 4000)
         }).catch()
       })
         
@@ -239,10 +239,7 @@ export function SignatureContextProvider({ children }: TypeContextProvider) {
       // deliveryTime:	string
     }
     api.post('order/create', dataInfo).then(() =>{
-      toast.success('Assinatura realizada com sucesso');
-      setTimeout(()=>{
-        router.push('/my-data')
-      }, 5000)
+      router.push('/request-success')
     }).catch()
   }
 

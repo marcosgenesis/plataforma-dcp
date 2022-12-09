@@ -9,7 +9,7 @@ interface DeliveryStore {
 
 export const useDeliveryStore = create<DeliveryStore>((set, get) => ({
   taxDelivery: 0,
-  deliveryTime: undefined,
+  deliveryTime: "",
 
   setTaxDelivery: (taxDelivery: number) => set({ taxDelivery }),
 }));

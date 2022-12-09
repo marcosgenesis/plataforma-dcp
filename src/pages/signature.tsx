@@ -134,13 +134,17 @@ const Signature: NextPage = () => {
           </StepsContainer>
 
           {step === 1 && <PlanForm nextStep={nextStep} />}
-
-          {step === 2 && (
-            <PersonalForm backStep={backStep} nextStep={nextStep} />
-          )}
-
-          {step === 3 && (
-            <AddressForm backStep={backStep} nextStep={nextStep} />
+          
+          {!token && (
+            <>
+              {step === 2 && (
+                <PersonalForm backStep={backStep} nextStep={nextStep} />
+              )}
+    
+              {step === 3 && (
+                <AddressForm backStep={backStep} nextStep={nextStep} />
+              )}
+            </>
           )}
 
           {step === 4 && <PayForm backStep={backStep} nextStep={nextStep} />}
